@@ -18,6 +18,29 @@ int main(int argc, char** argv)
 
     splitcell::DatGui::initialize(size.x, size.y);
 
+
+    splitcell::DatGui::add("explode", []()
+    {
+        printf("HIT ACTION\n");
+    });
+    auto folder = splitcell::DatGui::addFolder("Explosions");
+
+    folder->add("explode 3", []()
+    {
+        printf("HIT ACTION 3\n");
+    });
+
+    folder->add("explode 4", []()
+    {
+        printf("HIT ACTION 4\n");
+    });
+
+    splitcell::DatGui::add("explode 2", []()
+    {
+        printf("HIT ACTION 2\n");
+    });
+
+    
     sf::Clock clock;
     while (window.isOpen())
     {
@@ -75,17 +98,18 @@ int main(int argc, char** argv)
                 {
                     //touch.set(event.mouseButton.x, event.mouseButton.y);
                     //application.onTouchDown(&touch, 1, NULL, 0);
+                    splitcell::DatGui::onMouseDown(event.mouseButton.x, event.mouseButton.y);
                     break;
                 }
                 case sf::Event::MouseButtonReleased:
                 {
                     //touch.set(event.mouseButton.x, event.mouseButton.y);
                     //application.onTouchUp(&touch, 1, NULL, 0);
+                    splitcell::DatGui::onMouseUp(event.mouseButton.x, event.mouseButton.y);
                     break;
                 }
                 case sf::Event::MouseMoved:
-                    //touch.set(event.mouseMove.x, event.mouseMove.y);
-                    //application.onTouchMove(&touch, 1, NULL, 0);
+                    splitcell::DatGui::onMouseMove(event.mouseMove.x, event.mouseMove.y);
                     break;
                 case sf::Event::Resized:
                 	splitcell::DatGui::resizeScreen(event.size.width, event.size.height);
