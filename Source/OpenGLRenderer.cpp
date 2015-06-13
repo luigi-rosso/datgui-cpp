@@ -34,9 +34,6 @@ OpenGLFont::~OpenGLFont()
 OpenGLRenderer::OpenGLRenderer() : 
 						m_ScreenWidth(0), 
 						m_ScreenHeight(0),
-						m_IsBlendEnabled(false),
-						m_IsAdditiveBlending(false),
-						m_AreDepthWritesEnabled(false),
 						m_ViewportWidth(0),
             			m_ViewportHeight(0),
             			m_ViewportWidthRatio(1.0f),
@@ -45,7 +42,11 @@ OpenGLRenderer::OpenGLRenderer() :
             			m_LastBoundVertexBuffer(0),
             			m_FontScale(1.0f),
             			m_CurrentFont(NULL),
-            			m_CurrentFontTexture(0)
+            			m_CurrentFontTexture(0),
+            			m_WasBlending(false),
+            			m_HadDepthWrites(false),
+            			m_LastSFactor(GL_SRC_ALPHA),
+                  		m_LastDFactor(GL_ONE)
 {
 }
 
@@ -111,21 +112,11 @@ bool OpenGLRenderer::initialize()
 
 void OpenGLRenderer::enableDepthWrite()
 {
-	if(m_AreDepthWritesEnabled)
-	{
-		return;
-	}
-	m_AreDepthWritesEnabled = true;
 	glDepthMask(GL_TRUE);
 }
 
 void OpenGLRenderer::disableDepthWrite()
 {
-	if(!m_AreDepthWritesEnabled)
-	{
-		return;
-	}
-	m_AreDepthWritesEnabled = false;
 	glDepthMask(GL_FALSE);
 }
 
@@ -141,44 +132,18 @@ void OpenGLRenderer::disableDepthTest()
 
 void OpenGLRenderer::enableAdditiveBlending()
 {
-	if(!m_IsAdditiveBlending)
-	{
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		m_IsAdditiveBlending = true;
-	}
-
-	if(m_IsBlendEnabled)
-	{
-		return;
-	}
-
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glEnable(GL_BLEND);
-	m_IsBlendEnabled = true;
 }
 
 void OpenGLRenderer::enableBlending()
 {
-	if(m_IsAdditiveBlending)
-	{
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		m_IsAdditiveBlending = false;
-	}
-
-	if(m_IsBlendEnabled)
-	{
-		return;
-	}
-	m_IsBlendEnabled = true;
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 }
 
 void OpenGLRenderer::disableBlending()
 {
-	if(!m_IsBlendEnabled)
-	{
-		return;
-	}
-	m_IsBlendEnabled = false;
 	glDisable(GL_BLEND);
 }
 
@@ -238,6 +203,37 @@ bool OpenGLRenderer::bind(ShaderProgram& program, unsigned int buffer)
 
 	return true;
 }
+
+void OpenGLRenderer::pushState()
+{
+	glGetBooleanv(GL_BLEND, &m_WasBlending);
+	glGetBooleanv(GL_DEPTH_TEST, &m_HadDepthWrites);
+	glGetIntegerv(GL_BLEND_SRC_ALPHA, &m_LastSFactor);
+	glGetIntegerv(GL_BLEND_DST_ALPHA, &m_LastDFactor);
+}
+
+void OpenGLRenderer::popState()
+{
+	glBlendFunc(m_LastSFactor, m_LastDFactor);
+	if(m_HadDepthWrites)
+	{
+		glEnable(GL_DEPTH_TEST);
+	}
+	else
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
+
+	if(m_WasBlending)
+	{
+		glEnable(GL_BLEND);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+	}
+}
+
 
 void OpenGLRenderer::drawRect(float x, float y, float width, float height, const Color& color, float opacity)
 {

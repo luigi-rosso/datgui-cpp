@@ -1,5 +1,6 @@
 #include "Gui.hpp"
 #include "OpenGLRenderer.hpp"
+#include "Text.hpp"
 
 using namespace splitcell::datgui;
 
@@ -47,12 +48,22 @@ void Gui::draw()
 	{
 		return;
 	}
+
+	m_Renderer->pushState();
+
+	m_Renderer->enableBlending();
+	m_Renderer->disableDepthWrite();
+
 	static const float GuiWidth = 250.0f;
 	static const float GuiPad = 20.0f;
 
 	float x = (float)round(m_ScreenWidth - GuiWidth - GuiPad);
 	
 	m_Renderer->drawRect(x, 0.0f, GuiWidth, m_ScreenHeight, Color(0, 0, 0, 255), 1.0f);
+
+	Text::draw(m_Renderer, m_Font, x, 100.0f, "Testing...", Color(1.0f));
+
+	m_Renderer->popState();
 }
 
 bool Gui::onMouseDown(int x, int y)

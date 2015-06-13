@@ -77,10 +77,6 @@ namespace splitcell
                   unsigned int m_ScreenWidth;
                   unsigned int m_ScreenHeight;
 
-                  bool m_IsBlendEnabled;
-                  bool m_IsAdditiveBlending;
-                  bool m_AreDepthWritesEnabled;
-
                   int m_ViewportX;
                   int m_ViewportY;
                   unsigned int m_ViewportWidth;
@@ -102,6 +98,11 @@ namespace splitcell
                   float m_FontScale;
                   OpenGLFont* m_CurrentFont;
                   unsigned int m_CurrentFontTexture;
+
+                  unsigned char m_WasBlending;
+                  unsigned char m_HadDepthWrites;
+                  int m_LastSFactor;
+                  int m_LastDFactor;
                   
                   void setViewport(int x, int y, unsigned int width, unsigned int height);
 
@@ -129,7 +130,6 @@ namespace splitcell
                   void drawGlyph(FontTexture::Glyph* glyph, float x, float y);
                   Font* makeFont(MemoryFile* file);
                   
-            public:
                   void enableBlending();
                   void enableDepthWrite();
                   void disableDepthWrite();
@@ -137,6 +137,8 @@ namespace splitcell
                   void disableBlending();
                   void enableDepthTest();
                   void disableDepthTest();
+                  void pushState();
+                  void popState();
 
             private:
                   void internalSetClip(Clip &clip);

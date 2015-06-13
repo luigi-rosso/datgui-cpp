@@ -9,10 +9,11 @@ BUILD_DIR 		= Build
 LIB_DIR			= $(BUILD_DIR)/lib
 OBJ_DIR			= $(BUILD_DIR)/obj
 INCLUDE_DIR		= $(BUILD_DIR)/include/datgui
-CPP_SOURCES		= FontTexture.cpp Shader.cpp ShaderProgram.cpp OpenGLRenderer.cpp DatGui.cpp Gui.cpp MemoryFileReader.cpp
+CPP_SOURCES		= FontTexture.cpp Shader.cpp ShaderProgram.cpp OpenGLRenderer.cpp DatGui.cpp Gui.cpp MemoryFileReader.cpp Text.cpp
 CPP_OBJECTS		= $(CPP_SOURCES:%.cpp=$(OBJ_DIR)/%.o)
 # Default target
 all: dirs $(OUTPUTFILE)
+	cd Example && make
 
 clean:
 	$(RM) -fR $(BUILD_DIR)

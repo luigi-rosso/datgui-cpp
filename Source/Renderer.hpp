@@ -56,6 +56,9 @@ namespace splitcell
 				virtual unsigned int screenWidth() = 0;
 				virtual unsigned int screenHeight() = 0;
 
+				virtual void pushState() = 0;
+				virtual void popState() = 0;
+
             public:
 				struct Clip
 				{

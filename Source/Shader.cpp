@@ -23,13 +23,14 @@ Shader::Shader(const char* filename, unsigned char* buffer, unsigned int length)
 
     m_Id = glCreateShader(type);  
 
+    std::string shaderData((const char*)buffer, length);
 #ifdef PREFIX_SHADER_GL_VERSION
-    std::string shaderData((const char*)buffer);
     shaderData = std::string("#version 120\n") + shaderData;
     const char* data = shaderData.c_str();
     glShaderSource(m_Id, 1, (const char**)&data, NULL);
 #else
-    glShaderSource(m_Id, 1, (const char**)&buffer, NULL);
+    const char* data = shaderData.c_str();
+    glShaderSource(m_Id, 1, (const char**)&data, NULL);
 #endif
         
     glCompileShader(m_Id);
