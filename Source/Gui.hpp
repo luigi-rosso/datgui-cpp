@@ -29,6 +29,7 @@ namespace splitcell
 				static const float GuiPad;
 				static const float RowHeight;
 				static const float MarkerWidth;
+				static const float LabelPadding;
 
 				Gui(unsigned int screenWidth, unsigned int screenHeight);
 				~Gui();
@@ -38,6 +39,7 @@ namespace splitcell
 				static Gui* sm_Instance;
 				Renderer* m_Renderer;
 				Font* m_Font;
+				Font* m_IconFont;
 				unsigned int m_ScreenWidth;
 				unsigned int m_ScreenHeight;
 
@@ -47,7 +49,7 @@ namespace splitcell
 				bool m_IsHidingRows;
 
 				Row* m_CloseRow;
-				
+
 				void repositionRows();
 
 			protected:
@@ -73,6 +75,11 @@ namespace splitcell
 				static Font* font()
 				{
 					return sm_Instance->m_Font;
+				}
+
+				static Font* iconFont()
+				{
+					return sm_Instance->m_IconFont;
 				}
 
 				static void reposition()

@@ -10,11 +10,16 @@ using namespace splitcell::datgui;
 #include "MemoryFiles/Volter__28Goldfish_29.ttf9.cache.h"
 static MemoryFile FontMemoryFile("Volter__28Goldfish_29.ttf9.cache", Volter__28Goldfish_29_ttf9_cache, Volter__28Goldfish_29_ttf9_cache_len);
 
-const float Gui::GuiWidth = 250.0f;
-const float Gui::LabelColumnWidth = 75.0f;
+#include "MemoryFiles/fontawesome.ttf14.cache.h"
+static MemoryFile FontIconMemoryFile("fontawesome.ttf14.cache", fontawesome_ttf14_cache, fontawesome_ttf14_cache_len);
+
+const float Gui::GuiWidth = 300.0f;
+const float Gui::LabelColumnWidth = 100.0f;
 const float Gui::GuiPad = 20.0f;
 const float Gui::RowHeight = 25.0f;
 const float Gui::MarkerWidth = 2.0f;
+const float Gui::LabelPadding = 6.0f;
+
 Gui* Gui::sm_Instance = NULL;
 
 Gui::Gui(unsigned int screenWidth, unsigned int screenHeight) : m_ScreenWidth(screenWidth), m_ScreenHeight(screenHeight), m_Focus(NULL), m_MouseCapture(NULL), m_IsHidingRows(false)
@@ -34,6 +39,7 @@ Gui::Gui(unsigned int screenWidth, unsigned int screenHeight) : m_ScreenWidth(sc
 
 		// Instance members.
 		m_Font = m_Renderer->makeFont(&FontMemoryFile);
+		m_IconFont = m_Renderer->makeFont(&FontIconMemoryFile);
 	}
 
 	m_CloseRow = add<CloseRow>();
@@ -43,6 +49,7 @@ Gui::Gui(unsigned int screenWidth, unsigned int screenHeight) : m_ScreenWidth(sc
 Gui::~Gui()
 {
 	delete m_Font;
+	delete m_IconFont;
 	delete m_Renderer;
 }
 

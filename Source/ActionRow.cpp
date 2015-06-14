@@ -28,7 +28,7 @@ void ActionRow::draw(Renderer* renderer)
 	TextSize labelSize = Text::measure(Gui::font(), labelText);
 
 
-	Text::draw(renderer, Gui::font(), x() + Gui::MarkerWidth + 4.0f, (float)round(y() + h/2.0f - labelSize.height/2.0f + labelSize.maxAscender), labelText, Color(1.0f));
+	Text::draw(renderer, Gui::font(), x() + Gui::MarkerWidth + Gui::LabelPadding, (float)round(y() + h/2.0f - labelSize.height/2.0f + labelSize.maxAscender), labelText, Color(1.0f));
 
 	// Draw separator
 	renderer->drawRect(x() + Gui::MarkerWidth, y()+h-1.0f, width() - Gui::MarkerWidth, 1.0f, SeparatorColor);

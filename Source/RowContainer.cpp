@@ -7,6 +7,13 @@ RowContainer::RowContainer() : m_MouseOverRow(NULL)
 {
 
 }
+RowContainer::~RowContainer()
+{
+	for(auto r : m_Rows)
+	{
+		delete r;
+	}
+}
 
 void RowContainer::repositionRows(float x, float y, float width, float labelWidth)
 {

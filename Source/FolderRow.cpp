@@ -25,11 +25,15 @@ void FolderRow::draw(Renderer* renderer)
 	renderer->drawRect(x(), y(), width(), h, isMouseOver() && m_LastY <= Gui::RowHeight ? FolderOverBackgroundColor : FolderBackgroundColor);
 	//renderer->drawRect(x(), y(), Gui::MarkerWidth, h, MarkerColor);
 
+	unsigned int arrowIcon = m_IsOpen ? 61703/*61655*/ : 61701/*61658*/;
+
+	TextSize arrowSize = Text::measure(Gui::iconFont(), arrowIcon);
+	Text::draw(renderer, Gui::iconFont(), (float)round(x() + Gui::MarkerWidth + 3.0f), (float)round(y() + h/2.0f - arrowSize.height/2.0f + arrowSize.maxAscender), arrowIcon, Color(1.0f));
+
 	const char* labelText = label().c_str();
 	TextSize labelSize = Text::measure(Gui::font(), labelText);
+	Text::draw(renderer, Gui::font(), (float)round(x() + Gui::MarkerWidth + 3.0f + arrowSize.width + 6.0f), (float)round(y() + h/2.0f - labelSize.height/2.0f + labelSize.maxAscender), labelText, Color(1.0f));
 
-
-	Text::draw(renderer, Gui::font(), x() + Gui::MarkerWidth + 4.0f, (float)round(y() + h/2.0f - labelSize.height/2.0f + labelSize.maxAscender), labelText, Color(1.0f));
 
 	// Draw separator
 	renderer->drawRect(x() + Gui::MarkerWidth, y()+h-1.0f, width() - Gui::MarkerWidth, 1.0f, SeparatorColor);

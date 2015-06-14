@@ -9,7 +9,7 @@ namespace splitcell
 	{
 		class Row;
 		class Renderer;
-		
+
 		class RowContainer
 		{
 			private:
@@ -31,6 +31,7 @@ namespace splitcell
 				void draw(Renderer* renderer);
 			public:
 				RowContainer();
+				~RowContainer();
 
 				template<typename T>
 				T* add()

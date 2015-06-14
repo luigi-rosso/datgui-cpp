@@ -268,6 +268,20 @@ namespace splitcell
 			    return x;
 			}
 
+			inline static float draw(Renderer* renderer, Font* font, float x, float y, unsigned int t, const Color& color, float opacity = 1.0f, float scale = 1.0f)
+			{
+				renderer->setFont(font, color, opacity, scale);
+				
+				FontTexture::Glyph* glyph = font->getGlyph(t);
+				if(glyph != NULL)
+				{
+				    renderer->drawGlyph(glyph, x+glyph->HorizontalBearingX*scale, y-glyph->HorizontalBearingY*scale);
+				    x += glyph->HorizontalAdvance*scale;
+				}
+
+			    return x;
+			}
+
 			inline static TextSize measure(Font* font, const char* text)
 			{
 				TextSize size;
@@ -299,6 +313,37 @@ namespace splitcell
 			            x += glyph->HorizontalAdvance;
 			        }
 			    }
+
+			    size.width = x;
+			    size.height = top+bottom;
+			    size.maxAscender = top;
+			    size.maxDescender = bottom;
+
+			    return size;
+			}
+
+			inline static TextSize measure(Font* font, unsigned int t)
+			{
+				TextSize size;
+
+				float top = 0.0f;
+				float bottom = 0.0f;
+				float x = 0.0f;
+
+				FontTexture::Glyph* glyph = font->getGlyph(t);
+				if(glyph != NULL)
+				{
+					if(glyph->HorizontalBearingY > top)
+					{
+						top = glyph->HorizontalBearingY;
+					}
+					float b = glyph->Height - glyph->HorizontalBearingY;
+					if(b > bottom)
+					{
+						bottom = b;
+					}
+				    x += glyph->HorizontalAdvance;
+				}
 
 			    size.width = x;
 			    size.height = top+bottom;

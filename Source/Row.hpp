@@ -29,6 +29,8 @@ namespace splitcell
 				static const Color OverBackgroundColor;
 				static const Color SeparatorColor;
 				Row();
+				virtual ~Row() {}
+
 				void place(float x, float y, float width, float labelWidth);
 
 				virtual void onPlaced() = 0;

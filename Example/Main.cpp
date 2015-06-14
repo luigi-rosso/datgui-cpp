@@ -19,27 +19,36 @@ int main(int argc, char** argv)
     splitcell::DatGui::initialize(size.x, size.y);
 
 
-    splitcell::DatGui::add("explode", []()
+    splitcell::DatGui::addAction("explode", []()
     {
         printf("HIT ACTION\n");
     });
     auto folder = splitcell::DatGui::addFolder("Explosions");
 
-    folder->add("explode 3", []()
+    folder->addAction("explode 3", []()
     {
         printf("HIT ACTION 3\n");
     });
 
-    folder->add("explode 4", []()
+    auto b = folder->addBoolean("show mesh", true);
+
+    folder->addAction("explode 4", []()
     {
         printf("HIT ACTION 4\n");
     });
 
-    splitcell::DatGui::add("explode 2", []()
+    splitcell::DatGui::addAction("explode 2", []()
     {
         printf("HIT ACTION 2\n");
     });
 
+    splitcell::DatGui::addBoolean("displayOutline", false, [](bool changedTo)
+    {
+        printf("Checkbox changd to: %i\n", changedTo ? 1 : 0);
+    });
+
+
+    folder->remove(b);
     
     sf::Clock clock;
     while (window.isOpen())
