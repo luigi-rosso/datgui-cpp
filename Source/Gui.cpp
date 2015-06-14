@@ -17,7 +17,7 @@ const float Gui::GuiWidth = 300.0f;
 const float Gui::LabelColumnWidth = 100.0f;
 const float Gui::GuiPad = 20.0f;
 const float Gui::RowHeight = 25.0f;
-const float Gui::MarkerWidth = 2.0f;
+const float Gui::MarkerWidth = 3.0f;
 const float Gui::LabelPadding = 6.0f;
 
 Gui* Gui::sm_Instance = NULL;

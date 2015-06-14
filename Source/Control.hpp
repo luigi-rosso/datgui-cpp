@@ -15,7 +15,16 @@ namespace splitcell
 	{
 		class Control
 		{
+			private:
+				float m_X;
+				float m_Y;
+				float m_Width;
+				float m_Height;
+
 			public:
+				Control();
+				void place(float x, float y, float width, float height);
+
 				virtual void draw(Renderer* renderer) = 0;
 
 				virtual bool onMouseDown(int x, int y) = 0;
