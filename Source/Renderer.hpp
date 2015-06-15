@@ -129,9 +129,15 @@ namespace splitcell
 
 				void popClip()
 				{
-				    if(m_Clips.size() < 2)
+					int cs = m_Clips.size();
+				    if(cs < 2)
 				    {
 				          return;
+				    }
+				    else if(cs == 2)
+				    {
+				    	clearClip();
+				    	return;
 				    }
 				    m_Clips.erase(m_Clips.end()-1);
 				    Clip& lastClip = m_Clips[m_Clips.size()-1];

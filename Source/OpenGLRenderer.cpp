@@ -303,6 +303,7 @@ void OpenGLRenderer::drawGlyph(FontTexture::Glyph* glyph, float x, float y)
 
 void OpenGLRenderer::internalSetClip(Clip &clip)
 {
+	//printf("SETTING CLIP: %i %i %i %i\n", clip.x, clip.y, clip.w, clip.h);
 	glEnable(GL_SCISSOR_TEST);
 	glScissor(clip.x, m_ViewportHeight-clip.y-clip.h, clip.w < 0 ? 0 : clip.w, clip.h < 0 ? 0 : clip.h);
 }

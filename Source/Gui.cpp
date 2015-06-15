@@ -139,9 +139,11 @@ bool Gui::onMouseDown(int x, int y)
 
 bool Gui::onMouseUp(int x, int y)
 {
-	if(m_MouseCapture != NULL && m_MouseCapture->onMouseUp(x-m_MouseCapture->x(), y-m_MouseCapture->y()))
+	auto capture = m_MouseCapture;
+	m_MouseCapture = NULL;
+	
+	if(capture != NULL && capture->onMouseUp(x-capture->x(), y-capture->y()))
 	{
-		m_MouseCapture = NULL;
 		return true;
 	}
 	return RowContainer::onMouseUp(x,y);
