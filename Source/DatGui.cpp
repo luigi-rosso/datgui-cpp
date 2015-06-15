@@ -3,25 +3,26 @@
 #include "ActionRow.hpp"
 #include "FolderRow.hpp"
 #include "CheckboxRow.hpp"
+#include "TextRow.hpp"
 
 using namespace splitcell;
 using namespace splitcell::datgui;
 
 static Gui* gui = NULL;
 
-Data::Data() : m_Opaque(NULL)
+DatGui::Data::Data() : m_Opaque(NULL)
 {
 
 }
 
-Data::~Data()
+DatGui::Data::~Data()
 {
 	Row* r = reinterpret_cast<Row*>(m_Opaque);
 	delete r;
 
 }
 
-void Boolean::set(bool v)
+void DatGui::Boolean::set(bool v)
 {
 	if(v == m_Value)
 	{
@@ -34,12 +35,36 @@ void Boolean::set(bool v)
 	}
 }
 
-bool Boolean::get()
+bool DatGui::Boolean::get()
 {
 	return m_Value;
 }
 
-void Boolean::setCallback(std::function<void(bool)> cb)
+void DatGui::Boolean::setCallback(std::function<void(bool)> cb)
+{
+	m_ChangeCallback = cb;
+}
+
+void DatGui::Text::set(std::string v)
+{
+	if(m_Value == v)
+	{
+		return;
+	}
+	m_Value = v;
+
+	if(m_ChangeCallback != NULL)
+	{
+		m_ChangeCallback(v);
+	}
+}
+
+std::string DatGui::Text::get()
+{
+	return m_Value;
+}
+
+void DatGui::Text::setCallback(std::function<void(std::string)> cb)
 {
 	m_ChangeCallback = cb;
 }
@@ -108,6 +133,15 @@ bool DatGui::onMouseMove(int x, int y)
 	return gui->onMouseMove(x, y);
 }
 
+bool DatGui::onCharInput(unsigned long int utf8)
+{
+	if(gui == NULL)
+	{
+		return false;
+	}
+	return gui->onCharInput(utf8);
+}
+
 bool DatGui::onKeyDown(Keyboard::Key key)
 {
 	if(gui == NULL)
@@ -126,7 +160,7 @@ bool DatGui::onKeyUp(Keyboard::Key key)
 	return gui->onKeyUp(key);
 }
 
-void Folder::remove(Data* data)
+void DatGui::Folder::remove(Data* data)
 {
 	Row* row = reinterpret_cast<Row*>(data->m_Opaque);
 	FolderRow* fr = reinterpret_cast<FolderRow*>(m_Opaque);
@@ -147,7 +181,7 @@ void DatGui::remove(Data* data)
 	delete data;
 }
 
-Action* Folder::addAction(std::string label, std::function<void()> callback)
+DatGui::Action* DatGui::Folder::addAction(std::string label, std::function<void()> callback)
 {
 	FolderRow* fr = reinterpret_cast<FolderRow*>(m_Opaque);
 
@@ -159,7 +193,7 @@ Action* Folder::addAction(std::string label, std::function<void()> callback)
 	return a;
 }
 
-Action* DatGui::addAction(std::string label, std::function<void()> callback)
+DatGui::Action* DatGui::addAction(std::string label, std::function<void()> callback)
 {
 	if(gui == NULL)
 	{
@@ -174,7 +208,7 @@ Action* DatGui::addAction(std::string label, std::function<void()> callback)
 	return a;
 }
 
-Folder* DatGui::addFolder(std::string label)
+DatGui::Folder* DatGui::addFolder(std::string label)
 {
 	if(gui == NULL)
 	{
@@ -187,7 +221,7 @@ Folder* DatGui::addFolder(std::string label)
 	return a;
 }
 
-Boolean* Folder::addBoolean(std::string label, bool value, std::function<void(bool)> callback)
+DatGui::Boolean* DatGui::Folder::addBoolean(std::string label, bool value, std::function<void(bool)> callback)
 {
 	FolderRow* fr = reinterpret_cast<FolderRow*>(m_Opaque);
 
@@ -202,7 +236,7 @@ Boolean* Folder::addBoolean(std::string label, bool value, std::function<void(bo
 	return a;
 }
 
-Boolean* DatGui::addBoolean(std::string label, bool value, std::function<void(bool)> callback)
+DatGui::Boolean* DatGui::addBoolean(std::string label, bool value, std::function<void(bool)> callback)
 {
 	if(gui == NULL)
 	{
@@ -213,6 +247,23 @@ Boolean* DatGui::addBoolean(std::string label, bool value, std::function<void(bo
 	a->setCallback(callback);
 
 	CheckboxRow* row = gui->add<CheckboxRow>();
+	row->setLabel(label);
+	row->setData(a);
+	a->m_Opaque = row;
+	return a;
+}
+
+DatGui::Text* DatGui::addText(std::string label, std::string value, std::function<void(std::string)> callback)
+{
+	if(gui == NULL)
+	{
+		return NULL;
+	}
+	Text* a = new Text();
+	a->set(value);
+	a->setCallback(callback);
+
+	TextRow* row = gui->add<TextRow>();
 	row->setLabel(label);
 	row->setData(a);
 	a->m_Opaque = row;

@@ -2,11 +2,16 @@
 
 using namespace splitcell::datgui;
 
+const Color Control::BackgroundColor(60, 60, 60, 230);
+const Color Control::OverBackgroundColor(70, 70, 70, 230);
+const float Control::Padding = 5.0f;
+
 Control::Control() :
 		m_X(0.0f),
 		m_Y(0.0f),
 		m_Width(0.0f),
-		m_Height(0.0f)
+		m_Height(0.0f),
+		m_IsFocused(false)
 {
 
 }

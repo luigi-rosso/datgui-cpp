@@ -52,6 +52,7 @@ bool CheckboxRow::onMouseDown(int x, int y)
 {
 	if(m_Data != NULL)
 	{
+		Gui::focus(NULL);
 		m_Data->set(!m_Data->get());
 		return true;
 	}
@@ -68,7 +69,7 @@ bool CheckboxRow::onMouseMove(int x, int y)
 	return false;
 }
 
-void CheckboxRow::setData(Boolean* data)
+void CheckboxRow::setData(DatGui::Boolean* data)
 {
 	m_Data = data;
 }

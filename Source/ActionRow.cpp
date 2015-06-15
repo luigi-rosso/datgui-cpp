@@ -38,6 +38,7 @@ bool ActionRow::onMouseDown(int x, int y)
 {
 	if(m_Callback)
 	{
+		Gui::focus(NULL);
 		m_Callback();
 		return true;
 	}

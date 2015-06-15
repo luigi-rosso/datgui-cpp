@@ -2,6 +2,112 @@
 
 using namespace splitcell::datgui;
 
+std::string Text::fromUTF8(UTF8 utf8)
+{
+	// 0xxxxxxx
+	// 110xxxxx 10xxxxxx
+	// 1110xxxx 10xxxxxx 10xxxxxx
+	// 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+	// 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+	// 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+	std::string converted;
+
+	// Get number of bytes needed to represent utf8.
+	int bits = 1;
+	UTF8 test = utf8;
+	while(true)
+	{
+		test >>= 1;
+		if(test == 0x00)
+		{
+			break;
+		}
+		bits++;
+	}
+
+	if(bits <= 7)
+	{
+		//bytesNeeded = 1;
+		converted.append(1, (char)utf8);
+	}
+	else if(bits <= 11)
+	{
+		// 2 bytes
+		unsigned char c = 0xC0 | (unsigned char)(utf8>>6); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)(utf8&0x3F); // 1110
+		converted.append(1, (char)c);
+	}
+	else if(bits <= 16)
+	{
+		// 3 bytes
+		unsigned char c = 0xE0 | (unsigned char)(utf8>>12); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>6)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)(utf8&0x3F); // 1110
+		converted.append(1, (char)c);
+	}
+	else if(bits <= 21)
+	{
+		// 4 bytes
+		unsigned char c = 0xF0 | (unsigned char)(utf8>>18); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>12)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>6)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)(utf8&0x3F); // 1110
+		converted.append(1, (char)c);
+	}
+	else if(bits <= 26)
+	{
+		// 5 bytes
+		unsigned char c = 0xF8 | (unsigned char)(utf8>>24); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>18)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>12)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>6)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)(utf8&0x3F); // 1110
+		converted.append(1, (char)c);
+	}
+	else
+	{
+		// need 6 bytes
+		unsigned char c = 0xFC | (unsigned char)(utf8>>30); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>24)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>18)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>12)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)((utf8>>6)&0x3F); // 1110
+		converted.append(1, (char)c);
+
+		c = 0x80 | (unsigned char)(utf8&0x3F); // 1110
+		converted.append(1, (char)c);
+	}
+	return converted;
+}
+
 TextLayout Text::layout(Font* font, const char* originalText, TextBounds availableSize, float xOffset)
 {
 	// Layout needs to conver the entire buffer to UTF8...
@@ -9,7 +115,7 @@ TextLayout Text::layout(Font* font, const char* originalText, TextBounds availab
 
 	while(true)
 	{
-		unsigned int t = nextUTF8(originalText);
+		UTF8 t = nextUTF8(originalText);
 		txtLayout.text.push_back(t);
 		if(t == '\0')
 		{
@@ -21,7 +127,7 @@ TextLayout Text::layout(Font* font, const char* originalText, TextBounds availab
 		return txtLayout;
 	}
 
-	unsigned int* text = &txtLayout.text[0];
+	UTF8* text = &txtLayout.text[0];
 	std::vector<int>& breaks = txtLayout.breaks;
 
 	float maxWidth = availableSize.width;
@@ -32,16 +138,16 @@ TextLayout Text::layout(Font* font, const char* originalText, TextBounds availab
     bool hasEllipsis = false;
     float top = 0.0f;
 
-    unsigned int* end = NULL;
+    UTF8* end = NULL;
 
-    unsigned int* wordIndex = text;
+    UTF8* wordIndex = text;
     int wordWidth = 0;
     float maxLineWidth = 0;
 
-    unsigned int* current;
+    UTF8* current;
     for(current = text; *current != '\0'; current++)
     {
-    	unsigned int c = *current;
+    	UTF8 c = *current;
     	bool isWhiteSpace = false;
     	switch(c)
     	{
@@ -78,13 +184,13 @@ TextLayout Text::layout(Font* font, const char* originalText, TextBounds availab
     			if(breaks.size() == (size_t)(maxLines-1))
     			{
     				int sub = 3;
-    				unsigned int* idx = current-sub-1;
+    				UTF8* idx = current-sub-1;
     				if(idx > text)
     				{
     					// Keep going back until we find a word (remove all final punct)
     					while(idx > text)
     					{
-    						unsigned int sc = *idx;
+    						UTF8 sc = *idx;
     						switch(sc)
     						{
     							// White space and symbols.
@@ -145,7 +251,7 @@ TextLayout Text::layout(Font* font, const char* originalText, TextBounds availab
 							idx = current-sub-1;
 							while(idx > text)
 							{
-								unsigned int sc = *idx;
+								UTF8 sc = *idx;
 								switch(sc)
 								{
 									case 0x21: //!
@@ -201,7 +307,7 @@ TextLayout Text::layout(Font* font, const char* originalText, TextBounds availab
 							idx = current-sub-1;
 							while(idx > text)
 							{
-								unsigned int sc = *idx;
+								UTF8 sc = *idx;
 								switch(sc)
 								{
 									case 0x21: //!
@@ -299,7 +405,7 @@ TextLayout Text::layout(Font* font, const char* originalText, TextBounds availab
 	int firstBreak = breaks.size() > 0 ? breaks[0] : end-text;
     for(int i = 0; i < firstBreak; i++)
     {
-    	unsigned int c = *current;
+    	UTF8 c = *current;
     	current++;
 
     	FontTexture::Glyph* glyph = font->getGlyph(c);
@@ -347,7 +453,7 @@ TextLayout Text::layout(Font* font, const char* originalText, TextBounds availab
 	{
 		isLastLine = true;
 	}
-	for(unsigned int* t = text; *t != '\0' && t < end; t++)
+	for(UTF8* t = text; *t != '\0' && t < end; t++)
     {
     	if(breakItr != breaks.end())
         {

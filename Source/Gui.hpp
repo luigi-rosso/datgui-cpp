@@ -65,10 +65,11 @@ namespace splitcell
 
 				bool onKeyDown(Keyboard::Key key);
 				bool onKeyUp(Keyboard::Key key);
+				bool onCharInput(unsigned long int utf8);
 
-				void captureMouse(Control* control);
-				void releaseMouse(Control* control);
-				void focus(Control* control);
+				static void captureMouse(Control* control);
+				static void releaseMouse(Control* control);
+				static void focus(Control* control);
 				void setRowsHidden(bool hidden);
 				bool isHidingRows() { return m_IsHidingRows; }
 

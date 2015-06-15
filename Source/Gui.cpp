@@ -16,7 +16,7 @@ static MemoryFile FontIconMemoryFile("fontawesome.ttf14.cache", fontawesome_ttf1
 const float Gui::GuiWidth = 300.0f;
 const float Gui::LabelColumnWidth = 100.0f;
 const float Gui::GuiPad = 20.0f;
-const float Gui::RowHeight = 25.0f;
+const float Gui::RowHeight = 30.0f;
 const float Gui::MarkerWidth = 3.0f;
 const float Gui::LabelPadding = 6.0f;
 
@@ -129,13 +129,19 @@ bool Gui::onMouseDown(int x, int y)
 		return true;
 	}
 
-	return RowContainer::onMouseDown(x,y);
+	if(RowContainer::onMouseDown(x,y))
+	{
+		return true;
+	}
+	focus(NULL);
+	return false;
 }
 
 bool Gui::onMouseUp(int x, int y)
 {
-	if(m_MouseCapture != NULL && m_MouseCapture->onMouseUp(x, y))
+	if(m_MouseCapture != NULL && m_MouseCapture->onMouseUp(x-m_MouseCapture->x(), y-m_MouseCapture->y()))
 	{
+		m_MouseCapture = NULL;
 		return true;
 	}
 	return RowContainer::onMouseUp(x,y);
@@ -143,7 +149,7 @@ bool Gui::onMouseUp(int x, int y)
 
 bool Gui::onMouseMove(int x, int y)
 {
-	if(m_MouseCapture != NULL && m_MouseCapture->onMouseMove(x, y))
+	if(m_MouseCapture != NULL && m_MouseCapture->onMouseMove(x-m_MouseCapture->x(), y-m_MouseCapture->y()))
 	{
 		return true;
 	}
@@ -168,32 +174,41 @@ bool Gui::onKeyUp(Keyboard::Key key)
 	return false;
 }
 
+bool Gui::onCharInput(unsigned long int utf8)
+{
+	if(m_Focus != NULL && m_Focus->onCharInput(utf8))
+	{
+		return true;
+	}
+	return false;
+}
+
 void Gui::captureMouse(Control* control)
 {
-	m_MouseCapture = control;
+	sm_Instance->m_MouseCapture = control;
 }
 
 void Gui::releaseMouse(Control* control)
 {
-	if(m_MouseCapture == control)
+	if(sm_Instance->m_MouseCapture == control)
 	{
-		m_MouseCapture = NULL;
+		sm_Instance->m_MouseCapture = NULL;
 	}
 }
 
 void Gui::focus(Control* control)
 {
-	if(control == m_Focus)
+	if(control == sm_Instance->m_Focus)
 	{
 		return;
 	}
-	if(m_Focus != NULL)
+	if(sm_Instance->m_Focus != NULL)
 	{
-		m_Focus->onBlur();
+		sm_Instance->m_Focus->blur();
 	}
-	m_Focus = control;
-	if(m_Focus != NULL)
+	sm_Instance->m_Focus = control;
+	if(sm_Instance->m_Focus != NULL)
 	{
-		m_Focus->onFocus();
+		sm_Instance->m_Focus->focus();
 	}
 }

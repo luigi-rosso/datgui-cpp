@@ -1,5 +1,5 @@
-#ifndef _SPLITCELL_DATGUI_CHECKBOXROW_HPP_
-#define _SPLITCELL_DATGUI_CHECKBOXROW_HPP_
+#ifndef _SPLITCELL_DATGUI_TEXTROW_HPP_
+#define _SPLITCELL_DATGUI_TEXTROW_HPP_
 
 #ifndef _SPLITCELL_DATGUI_ROW_HPP_
 #include "Row.hpp"
@@ -9,17 +9,22 @@
 #include "DatGui.hpp"
 #endif
 
+#ifndef _SPLITCELL_DATGUI_TEXTFIELD_HPP_
+#include "TextField.hpp"
+#endif
+
 namespace splitcell
 {
 	namespace datgui
 	{
-		class CheckboxRow : public Row
+		class TextRow : public Row
 		{
 			private:
-				DatGui::Boolean* m_Data;
+				DatGui::Text* m_Data;
+				TextField m_TextField;
 
 			public:
-				CheckboxRow();
+				TextRow();
 				void onPlaced();
 				float height();
 
@@ -29,7 +34,7 @@ namespace splitcell
 				bool onMouseUp(int x, int y);
 				bool onMouseMove(int x, int y);
 
-				void setData(DatGui::Boolean* data);
+				void setData(DatGui::Text* data);
 		};
 	}
 }

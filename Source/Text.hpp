@@ -9,10 +9,13 @@
 #include "Size.hpp"
 #endif
 
+#include <string>
+
 namespace splitcell
 {
 	namespace datgui
 	{
+		typedef unsigned long int UTF8;
 		struct TextSize : public Size
 		{
 			float maxAscender;
@@ -23,7 +26,7 @@ namespace splitcell
 
 		struct TextLayout : public TextSize
 		{
-			std::vector<unsigned int> text;
+			std::vector<UTF8> text;
 			std::vector<int> breaks;
 			bool hasEllipsis;
 			float xOffset;
@@ -47,7 +50,7 @@ namespace splitcell
 				{
 					return y;
 				}
-				unsigned int* text = &layout.text[0];
+				UTF8* text = &layout.text[0];
 				renderer->setFont(font, color, opacity, scale);
 
 				std::vector<int>::iterator breakItr = layout.breaks.begin();
@@ -57,7 +60,7 @@ namespace splitcell
 				float originX = x;
 				x += layout.xOffset;
 
-				for(unsigned int* t = text; *t != '\0'; t++)
+				for(UTF8* t = text; *t != '\0'; t++)
 			    {
 			    	if(breakItr != breaks.end())
 			        {
@@ -100,7 +103,7 @@ namespace splitcell
 				{
 					return y;
 				}
-				unsigned int* text = &layout.text[0];
+				UTF8* text = &layout.text[0];
 				renderer->setFont(font, color, opacity, scale);
 
 				std::vector<int>::iterator breakItr = layout.breaks.begin();
@@ -112,7 +115,7 @@ namespace splitcell
 
 				std::vector<float> lineWidths;
 				float lw = 0.0f;
-				for(unsigned int* t = text; *t != '\0'; t++)
+				for(UTF8* t = text; *t != '\0'; t++)
 			    {
 			    	if(breakItr != breaks.end())
 			        {
@@ -140,7 +143,7 @@ namespace splitcell
 			    lw = *widthItr;
 			    x = originX + layout.width/2.0f - lw/2.0f;
 
-				for(unsigned int* t = text; *t != '\0'; t++)
+				for(UTF8* t = text; *t != '\0'; t++)
 			    {
 			    	if(breakItr != breaks.end())
 			        {
@@ -179,10 +182,11 @@ namespace splitcell
 			    return y;
 			}
 
+			static std::string fromUTF8(UTF8 utf8);
 
-			inline static unsigned int nextUTF8(const char*& text)
+			inline static UTF8 nextUTF8(const char*& text)
 			{
-				unsigned int c = *text;
+				UTF8 c = *text;
 				// 0xxxxxxx
 				// 110xxxxx 10xxxxxx
 				// 1110xxxx 10xxxxxx 10xxxxxx
@@ -251,7 +255,7 @@ namespace splitcell
 				
 				while(true)
 				{
-					unsigned int t = nextUTF8(text);
+					UTF8 t = nextUTF8(text);
 					if(t == '\0')
 					{
 						break;
@@ -268,7 +272,7 @@ namespace splitcell
 			    return x;
 			}
 
-			inline static float draw(Renderer* renderer, Font* font, float x, float y, unsigned int t, const Color& color, float opacity = 1.0f, float scale = 1.0f)
+			inline static float draw(Renderer* renderer, Font* font, float x, float y, UTF8 t, const Color& color, float opacity = 1.0f, float scale = 1.0f)
 			{
 				renderer->setFont(font, color, opacity, scale);
 				
@@ -292,7 +296,7 @@ namespace splitcell
 
 				while(true)
 				{
-					unsigned int t = nextUTF8(text);
+					UTF8 t = nextUTF8(text);
 					if(t == '\0')
 					{
 						break;
@@ -322,7 +326,78 @@ namespace splitcell
 			    return size;
 			}
 
-			inline static TextSize measure(Font* font, unsigned int t)
+			inline static TextSize measure(Font* font, const char* text, unsigned int count)
+			{
+				TextSize size;
+
+				float top = 0.0f;
+				float bottom = 0.0f;
+				float x = 0.0f;
+
+				while(count > 0)
+				{
+					UTF8 t = nextUTF8(text);
+					if(t == '\0')
+					{
+						break;
+					}
+			        FontTexture::Glyph* glyph = font->getGlyph(t);
+			        if(glyph != NULL)
+			        {
+			        	if(glyph->HorizontalBearingY > top)
+			        	{
+			        		top = glyph->HorizontalBearingY;
+			        	}
+			        	float b = glyph->Height - glyph->HorizontalBearingY;
+			        	if(b > bottom)
+			        	{
+			        		bottom = b;
+			        	}
+			            //renderer->drawGlyph(glyph, x+glyph->HorizontalBearingX*scale, y-glyph->HorizontalBearingY*scale);
+			            x += glyph->HorizontalAdvance;
+			        }
+			        count--;
+			    }
+
+			    size.width = x;
+			    size.height = top+bottom;
+			    size.maxAscender = top;
+			    size.maxDescender = bottom;
+
+			    return size;
+			}
+
+			inline static int characterIndex(Font* font, const char* text, float w)
+			{
+				int index = 0;
+				float runningWidth = 0.0f;
+				while(true)
+				{
+					UTF8 t = nextUTF8(text);
+					if(t == '\0')
+					{
+						break;
+					}
+			        FontTexture::Glyph* glyph = font->getGlyph(t);
+			        if(glyph != NULL)
+			        {
+			        	float ha = glyph->HorizontalAdvance;
+			        	if(runningWidth + ha/2.0f >= w)
+			        	{
+			        		return index;
+			        	}
+			        	runningWidth += ha;
+			            /*if(w <= 0.0f)
+			            {
+			            	return index;
+			            }*/
+			        }
+			        index++;
+			    }
+			    return index;
+			}
+
+			inline static TextSize measure(Font* font, UTF8 t)
 			{
 				TextSize size;
 

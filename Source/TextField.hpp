@@ -5,13 +5,27 @@
 #include "Control.hpp"
 #endif
 
+#ifndef _SPLITCELL_DATGUI_HPP_
+#include "DatGui.hpp"
+#endif
+
 namespace splitcell
 {
 	namespace datgui
 	{
-		class TextField
+		class TextField : public Control
 		{
+			private:
+				DatGui::Text* m_Data;
+				float m_Offset;
+				int m_SelectedIndex;
+				bool m_IsDraggingCursor;
+
+				void injectText(std::string text);
+				void ensureCursorVisible();
+
 			public:
+				TextField();
 				void draw(Renderer* renderer);
 
 				bool onMouseDown(int x, int y);
@@ -20,9 +34,12 @@ namespace splitcell
 
 				bool onKeyDown(Keyboard::Key key);
 				bool onKeyUp(Keyboard::Key key);
+				bool onCharInput(unsigned long int utf8);
 
 				void onFocus();
 				void onBlur();
+
+				void setData(DatGui::Text* data);
 		};
 	}
 }

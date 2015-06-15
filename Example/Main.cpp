@@ -46,10 +46,15 @@ int main(int argc, char** argv)
     {
         printf("Checkbox changd to: %i\n", changedTo ? 1 : 0);
     });
+    
+    splitcell::DatGui::addText("message", "test", [](std::string val)
+    {
+        printf("Text changde to: %s\n", val.c_str());
+    });
 
 
     folder->remove(b);
-    
+
     sf::Clock clock;
     while (window.isOpen())
     {
@@ -59,13 +64,16 @@ int main(int argc, char** argv)
         {
             switch(event.type)
             {
-                /*case sf::Event::KeyPressed:
-                    application.OnKeyDown((SplitCell::Keyboard::Key)event.key.code);
+               case sf::Event::KeyPressed:
+                    splitcell::DatGui::onKeyDown((splitcell::datgui::Keyboard::Key)event.key.code);
                     break;
                 case sf::Event::KeyReleased:
-                    application.OnKeyUp((SplitCell::Keyboard::Key)event.key.code);
+                    splitcell::DatGui::onKeyUp((splitcell::datgui::Keyboard::Key)event.key.code);
                     break;
-                case sf::Event::MouseButtonPressed:
+                case sf::Event::TextEntered:
+                    splitcell::DatGui::onCharInput(event.text.unicode);
+                    break;
+                 /*case sf::Event::MouseButtonPressed:
                 {
                     SplitCell::Mouse::Button buttonType;
                     switch(event.mouseButton.button)

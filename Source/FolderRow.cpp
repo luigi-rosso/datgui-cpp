@@ -50,6 +50,7 @@ bool FolderRow::onMouseDown(int x, int y)
 	{
 		m_IsOpen = !m_IsOpen;
 		Gui::reposition();
+		Gui::focus(NULL);
 		return true;
 	}
 	return RowContainer::onMouseDown(x + Row::x(), y + Row::y());

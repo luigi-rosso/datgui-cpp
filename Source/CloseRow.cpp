@@ -33,8 +33,9 @@ void CloseRow::draw(Renderer* renderer)
 
 bool CloseRow::onMouseDown(int x, int y)
 {
+	Gui::focus(NULL);
 	Gui::toggleHideRows();
-	return false;
+	return true;
 }
 
 bool CloseRow::onMouseUp(int x, int y)
