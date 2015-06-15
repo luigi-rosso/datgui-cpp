@@ -22,7 +22,13 @@ const float Gui::LabelPadding = 6.0f;
 
 Gui* Gui::sm_Instance = NULL;
 
-Gui::Gui(unsigned int screenWidth, unsigned int screenHeight) : m_ScreenWidth(screenWidth), m_ScreenHeight(screenHeight), m_Focus(NULL), m_MouseCapture(NULL), m_IsHidingRows(false)
+Gui::Gui(unsigned int screenWidth, unsigned int screenHeight) : 
+	m_ScreenWidth(screenWidth), 
+	m_ScreenHeight(screenHeight), 
+	m_Focus(NULL), 
+	m_MouseCapture(NULL), 
+	m_IsHidingRows(false),
+	m_LastRenderTime(std::chrono::system_clock::now())
 {
 	sm_Instance = this;
 	// Instance a different renderer here if wanted.
@@ -107,6 +113,9 @@ void Gui::resizeScreen(unsigned int screenWidth, unsigned int screenHeight)
 
 void Gui::draw()
 {
+	std::chrono::duration<float> elapsed_seconds = std::chrono::system_clock::now()-m_LastRenderTime;
+	m_ElapsedSeconds = elapsed_seconds.count();
+
 	if(m_Renderer == NULL)
 	{
 		return;
@@ -141,7 +150,7 @@ bool Gui::onMouseUp(int x, int y)
 {
 	auto capture = m_MouseCapture;
 	m_MouseCapture = NULL;
-	
+
 	if(capture != NULL && capture->onMouseUp(x-capture->x(), y-capture->y()))
 	{
 		return true;

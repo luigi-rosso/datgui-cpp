@@ -13,6 +13,8 @@
 #include "RowContainer.hpp"
 #endif
 
+#include <chrono>
+
 namespace splitcell
 {
 	namespace datgui
@@ -49,6 +51,8 @@ namespace splitcell
 				bool m_IsHidingRows;
 
 				Row* m_CloseRow;
+				std::chrono::time_point<std::chrono::system_clock> m_LastRenderTime;
+				float m_ElapsedSeconds;
 
 				void repositionRows();
 
@@ -91,6 +95,11 @@ namespace splitcell
 				static void toggleHideRows()
 				{
 					sm_Instance->setRowsHidden(!sm_Instance->isHidingRows());
+				}
+
+				static float elapsedSeconds()
+				{
+					return sm_Instance->m_ElapsedSeconds;
 				}
 		};
 	}

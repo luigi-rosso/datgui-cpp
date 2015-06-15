@@ -20,9 +20,15 @@ namespace splitcell
 				float m_Offset;
 				int m_SelectedIndex;
 				bool m_IsDraggingCursor;
+				int m_SelectionStartIndex;
+				int m_SelectionEndIndex;
 
 				void injectText(std::string text);
 				void ensureCursorVisible();
+				bool eraseSelection();
+
+				float m_MouseDownSeconds;
+				float m_IsShiftPressed;
 
 			public:
 				TextField();
