@@ -31,7 +31,13 @@ namespace splitcell
 
 			class Numeric : public Data
 			{
-
+				private:
+					float m_Value;
+					std::function<void(float)> m_ChangeCallback;
+				public:
+					void set(float v);
+					float get();
+					void setCallback(std::function<void(float)> cb);
 			};
 
 			class Boolean : public Data
@@ -101,6 +107,7 @@ namespace splitcell
 			static Action* addAction(std::string label, std::function<void()> callback);
 			static Boolean* addBoolean(std::string label, bool value, std::function<void(bool)> callback = NULL);
 			static Text* addText(std::string label, std::string value, std::function<void(std::string)> callback = NULL);
+			static Numeric* addNumeric(std::string label, float value, std::function<void(float)> callback = NULL);
 			static Folder* addFolder(std::string label);
 
 			static void remove(Data* data);

@@ -4,6 +4,7 @@
 #include "FolderRow.hpp"
 #include "CheckboxRow.hpp"
 #include "TextRow.hpp"
+#include "NumericRow.hpp"
 
 using namespace splitcell;
 using namespace splitcell::datgui;
@@ -20,6 +21,29 @@ DatGui::Data::~Data()
 	Row* r = reinterpret_cast<Row*>(m_Opaque);
 	delete r;
 
+}
+
+void DatGui::Numeric::set(float v)
+{
+	if(v == m_Value)
+	{
+		return;
+	}
+	m_Value = v;
+	if(m_ChangeCallback != NULL)
+	{
+		m_ChangeCallback(v);
+	}
+}
+
+float DatGui::Numeric::get()
+{
+	return m_Value;
+
+}
+void DatGui::Numeric::setCallback(std::function<void(float)> cb)
+{
+	m_ChangeCallback = cb;
 }
 
 void DatGui::Boolean::set(bool v)
@@ -264,6 +288,23 @@ DatGui::Text* DatGui::addText(std::string label, std::string value, std::functio
 	a->setCallback(callback);
 
 	TextRow* row = gui->add<TextRow>();
+	row->setLabel(label);
+	row->setData(a);
+	a->m_Opaque = row;
+	return a;
+}
+
+DatGui::Numeric* DatGui::addNumeric(std::string label, float value, std::function<void(float)> callback)
+{
+	if(gui == NULL)
+	{
+		return NULL;
+	}
+	Numeric* a = new Numeric();
+	a->set(value);
+	a->setCallback(callback);
+
+	NumericRow* row = gui->add<NumericRow>();
 	row->setLabel(label);
 	row->setData(a);
 	a->m_Opaque = row;

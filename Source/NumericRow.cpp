@@ -1,28 +1,28 @@
-#include "TextRow.hpp"
+#include "NumericRow.hpp"
 #include "Gui.hpp"
 #include "Text.hpp"
 #include <cmath>
 
 using namespace splitcell::datgui;
 
-static const Color MarkerColor(0, 150, 255, 255);
+static const Color MarkerColor(0, 150, 255, 200);
 
-TextRow::TextRow() : m_Data(NULL)
+NumericRow::NumericRow() : m_Data(NULL)
 {
 	m_TextField.setAccentColor(MarkerColor);
 }
 
-void TextRow::onPlaced()
+void NumericRow::onPlaced()
 {
 	m_TextField.place(x() + labelWidth() + Gui::LabelPadding, y() + Control::Padding, width() - labelWidth() - Control::Padding*2, height() - Control::Padding*2);
 }
 
-float TextRow::height()
+float NumericRow::height()
 {
 	return Gui::RowHeight;
 }
 
-void TextRow::draw(Renderer* renderer)
+void NumericRow::draw(Renderer* renderer)
 {
 	float h = height();
 	renderer->drawRect(x(), y(), width(), h, isMouseOver() ? OverBackgroundColor : BackgroundColor);
@@ -50,7 +50,7 @@ void TextRow::draw(Renderer* renderer)
 	renderer->drawRect(x() + Gui::MarkerWidth, y()+h-1.0f, width() - Gui::MarkerWidth, 1.0f, SeparatorColor);
 }
 
-bool TextRow::onMouseDown(int x, int y)
+bool NumericRow::onMouseDown(int x, int y)
 {
 	float gx = x + Row::x();
 	float gy = y + Row::y();
@@ -65,7 +65,7 @@ bool TextRow::onMouseDown(int x, int y)
 	return false;
 }
 
-bool TextRow::onMouseUp(int x, int y)
+bool NumericRow::onMouseUp(int x, int y)
 {
 	float gx = x + Row::x();
 	float gy = y + Row::y();
@@ -80,7 +80,7 @@ bool TextRow::onMouseUp(int x, int y)
 	return false;
 }
 
-bool TextRow::onMouseMove(int x, int y)
+bool NumericRow::onMouseMove(int x, int y)
 {
 	float gx = x + Row::x();
 	float gy = y + Row::y();
@@ -95,8 +95,8 @@ bool TextRow::onMouseMove(int x, int y)
 	return false;
 }
 
-void TextRow::setData(DatGui::Text* data)
+void NumericRow::setData(DatGui::Numeric* data)
 {
 	m_Data = data;
-	m_TextField.setData(data);
+	//m_TextField.setData(data);
 }

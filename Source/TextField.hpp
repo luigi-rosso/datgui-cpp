@@ -17,6 +17,7 @@ namespace splitcell
 		{
 			private:
 				DatGui::Text* m_Data;
+				std::string m_TextCache;
 				float m_Offset;
 				int m_SelectedIndex;
 				bool m_IsDraggingCursor;
