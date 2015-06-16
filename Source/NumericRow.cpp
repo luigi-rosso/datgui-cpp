@@ -10,6 +10,25 @@ static const Color MarkerColor(0, 150, 255, 255);
 NumericRow::NumericRow() : m_CacheNumDecimals(2), m_Data(NULL)
 {
 	m_TextField.setAccentColor(MarkerColor);
+
+	m_TextfieldData.setCallback([this](std::string text)
+	{
+		printf("CB %s\n", text.c_str());
+		if(m_Data == NULL)
+		{
+			return;
+		}
+		try
+		{
+			float f = std::stof(text);
+			m_Data->set(f);
+			updateDisplayValue();
+		}
+		catch(const std::invalid_argument& error)
+		{
+			// Somehow show the error? Do we care?
+		}
+	});
 }
 
 void NumericRow::onPlaced()
@@ -30,11 +49,28 @@ void NumericRow::updateDisplayValue()
 	}
 	m_CacheNumDecimals = m_Data->decimals();
 
-	char fmtbuffer[16];
-	std::snprintf(fmtbuffer, sizeof(fmtbuffer), "%%.%if", m_CacheNumDecimals);
 
 	char buffer[256];
-	std::snprintf(buffer, sizeof(buffer), fmtbuffer, m_Data->get());
+
+	if(m_CacheNumDecimals == -1)
+	{
+		std::snprintf(buffer, sizeof(buffer), "%g", m_Data->get());
+	}
+	else if(m_CacheNumDecimals == 0)
+	{
+		std::snprintf(buffer, sizeof(buffer), "%.0f", m_Data->get());
+	}
+	else
+	{
+		char fmtbuffer[16];
+		std::snprintf(fmtbuffer, sizeof(fmtbuffer), "%%.%if", m_CacheNumDecimals);
+		std::snprintf(buffer, sizeof(buffer), fmtbuffer, m_Data->get());
+	}
+
+	
+	
+
+	printf("FROM: %f TO %s\n", m_Data->get(), buffer);
 	m_TextfieldData.set(std::string(buffer));
 	m_TextField.setData(&m_TextfieldData);
 }

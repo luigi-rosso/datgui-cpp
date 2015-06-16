@@ -23,7 +23,7 @@ DatGui::Data::~Data()
 
 }
 
-DatGui::Numeric::Numeric() : m_NumDecimals(2)
+DatGui::Numeric::Numeric() : m_NumDecimals(-1)
 {
 
 }
