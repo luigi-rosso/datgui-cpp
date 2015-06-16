@@ -135,7 +135,6 @@ bool TextField::onKeyDown(Keyboard::Key key)
 			return true;
 		case Keyboard::Left:
 		{
-			
 			int nextSelectedIndex = std::max(0, std::min((int)m_Data->get().size(), m_SelectedIndex - 1));
 
 			if(m_IsShiftPressed)
