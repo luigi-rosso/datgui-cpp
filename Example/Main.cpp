@@ -58,6 +58,7 @@ int main(int argc, char** argv)
     });
     n->decimals(-1);
     n->step(0.1f);
+    n->range(-1.0f, 10.0f);
 
 
     folder->remove(b);

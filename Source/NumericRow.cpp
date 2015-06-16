@@ -7,7 +7,7 @@ using namespace splitcell::datgui;
 
 static const Color MarkerColor(0, 150, 255, 255);
 
-NumericRow::NumericRow() : m_CacheNumDecimals(2), m_Data(NULL)
+NumericRow::NumericRow() : m_CacheNumDecimals(2), m_CacheValue(0.0f), m_Data(NULL)
 {
 	m_TextField.setAccentColor(MarkerColor);
 
@@ -33,6 +33,10 @@ NumericRow::NumericRow() : m_CacheNumDecimals(2), m_Data(NULL)
 		{
 			// Somehow show the error? Do we care?
 		}
+		catch(const std::out_of_range& error)
+		{
+			// Somehow show the error? Do we care?
+		}
 	});
 }
 
@@ -54,22 +58,22 @@ void NumericRow::updateDisplayValue()
 	}
 	m_CacheNumDecimals = m_Data->decimals();
 
-
+	m_CacheValue = m_Data->get();
 	char buffer[256];
 
 	if(m_CacheNumDecimals == -1)
 	{
-		std::snprintf(buffer, sizeof(buffer), "%g", m_Data->get());
+		std::snprintf(buffer, sizeof(buffer), "%g", m_CacheValue);
 	}
 	else if(m_CacheNumDecimals == 0)
 	{
-		std::snprintf(buffer, sizeof(buffer), "%.0f", m_Data->get());
+		std::snprintf(buffer, sizeof(buffer), "%.0f", m_CacheValue);
 	}
 	else
 	{
 		char fmtbuffer[16];
 		std::snprintf(fmtbuffer, sizeof(fmtbuffer), "%%.%if", m_CacheNumDecimals);
-		std::snprintf(buffer, sizeof(buffer), fmtbuffer, m_Data->get());
+		std::snprintf(buffer, sizeof(buffer), fmtbuffer, m_CacheValue);
 	}
 
 	m_TextfieldData.set(std::string(buffer));
@@ -78,7 +82,7 @@ void NumericRow::updateDisplayValue()
 
 void NumericRow::draw(Renderer* renderer)
 {
-	if(m_Data != NULL && m_Data->decimals() != m_CacheNumDecimals)
+	if(m_Data != NULL && (m_Data->get() != m_CacheValue || m_Data->decimals() != m_CacheNumDecimals))
 	{
 		updateDisplayValue();
 	}

@@ -21,6 +21,7 @@ namespace splitcell
 		{
 			private:
 				int m_CacheNumDecimals;
+				float m_CacheValue;
 				DatGui::Text m_TextfieldData;
 				DatGui::Numeric* m_Data;
 				TextField m_TextField;

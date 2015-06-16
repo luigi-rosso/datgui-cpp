@@ -6,6 +6,8 @@
 #include "TextRow.hpp"
 #include "NumericRow.hpp"
 
+#include <limits>
+
 using namespace splitcell;
 using namespace splitcell::datgui;
 
@@ -23,7 +25,7 @@ DatGui::Data::~Data()
 
 }
 
-DatGui::Numeric::Numeric() : m_NumDecimals(-1), m_Step(1.0f)
+DatGui::Numeric::Numeric() : m_NumDecimals(-1), m_Step(1.0f), m_Min(-std::numeric_limits<float>::max()), m_Max(std::numeric_limits<float>::max())
 {
 
 }
@@ -34,11 +36,43 @@ void DatGui::Numeric::set(float v)
 	{
 		return;
 	}
-	m_Value = v;
+	m_Value = std::max(m_Min, std::min(m_Max, v));
 	if(m_ChangeCallback != NULL)
 	{
 		m_ChangeCallback(v);
 	}
+}
+
+void DatGui::Numeric::min(float m)
+{
+	m_Min = m;
+	float v = std::max(m_Min, std::min(m_Max, m_Value));
+	set(v);
+}
+
+float DatGui::Numeric::min()
+{
+	return m_Min;
+}
+
+void DatGui::Numeric::max(float m)
+{
+	m_Max = m;
+	float v = std::max(m_Min, std::min(m_Max, m_Value));
+	set(v);
+}
+
+float DatGui::Numeric::max()
+{
+	return m_Max;
+}
+
+void DatGui::Numeric::range(float mn, float mx)
+{
+	m_Min = mn;
+	m_Max = mx;
+	float v = std::max(m_Min, std::min(m_Max, m_Value));
+	set(v);
 }
 
 void DatGui::Numeric::decimals(int num)
