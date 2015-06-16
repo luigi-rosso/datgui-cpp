@@ -11,9 +11,14 @@ NumericRow::NumericRow() : m_CacheNumDecimals(2), m_Data(NULL)
 {
 	m_TextField.setAccentColor(MarkerColor);
 
+	m_TextField.setDragCallback([this](int drag)
+	{
+		m_Data->set(m_Data->get()-drag*m_Data->step());
+		updateDisplayValue();
+	});
+
 	m_TextfieldData.setCallback([this](std::string text)
 	{
-		printf("CB %s\n", text.c_str());
 		if(m_Data == NULL)
 		{
 			return;
@@ -67,10 +72,6 @@ void NumericRow::updateDisplayValue()
 		std::snprintf(buffer, sizeof(buffer), fmtbuffer, m_Data->get());
 	}
 
-	
-	
-
-	printf("FROM: %f TO %s\n", m_Data->get(), buffer);
 	m_TextfieldData.set(std::string(buffer));
 	m_TextField.setData(&m_TextfieldData);
 }

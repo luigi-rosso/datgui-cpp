@@ -7,7 +7,7 @@ using namespace splitcell::datgui;
 
 static const float TextPad = 2.0f;
 
-TextField::TextField() : m_Data(NULL), m_Offset(0.0f), m_SelectedIndex(0), m_IsDraggingCursor(false), m_SelectionStartIndex(-1), m_SelectionEndIndex(-1), m_MouseDownSeconds(0.0f), m_IsShiftPressed(false)
+TextField::TextField() : m_Data(NULL), m_Offset(0.0f), m_SelectedIndex(0), m_IsDraggingCursor(false), m_SelectionStartIndex(-1), m_SelectionEndIndex(-1), m_MouseDownSeconds(0.0f), m_IsShiftPressed(false), m_DragLastY(0)
 {
 
 }
@@ -79,6 +79,7 @@ bool TextField::onMouseDown(int x, int y)
 
 	Gui::captureMouse(this);
 	m_IsDraggingCursor = true;
+	m_DragLastY = y;
 	float ds = Gui::elapsedSeconds()-0.5f;
 	bool selectAll = false;
 	if((ds - m_MouseDownSeconds) < 0.25f)
@@ -108,10 +109,21 @@ bool TextField::onMouseUp(int x, int y)
 	return false;
 }
 
+void TextField::setDragCallback(std::function<void(int)> callback)
+{
+	m_DragCallback = callback;
+}
+
 bool TextField::onMouseMove(int x, int y)
 {
 	if(m_IsDraggingCursor)
 	{
+		if(m_DragCallback != NULL)
+		{
+			m_DragCallback(y - m_DragLastY);
+			m_DragLastY = y;
+		}
+
 		m_MouseDownSeconds = Gui::elapsedSeconds()-0.5f;
 		float startX = m_Offset + 2;
 		int nextSelectedIndex = Text::characterIndex(Gui::font(), m_TextCache.c_str(), x - startX);

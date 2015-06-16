@@ -35,6 +35,7 @@ namespace splitcell
 				private:
 					float m_Value;
 					int m_NumDecimals;
+					float m_Step;
 
 					std::function<void(float)> m_ChangeCallback;
 					Numeric();
@@ -45,6 +46,9 @@ namespace splitcell
 
 					void decimals(int num);
 					int decimals();
+
+					void step(float st);
+					float step();
 			};
 
 			class Boolean : public Data

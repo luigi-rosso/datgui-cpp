@@ -57,6 +57,7 @@ int main(int argc, char** argv)
         printf("PI changed to: %f\n", val);
     });
     n->decimals(-1);
+    n->step(0.1f);
 
 
     folder->remove(b);

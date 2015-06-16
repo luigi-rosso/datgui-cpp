@@ -31,6 +31,9 @@ namespace splitcell
 				float m_MouseDownSeconds;
 				float m_IsShiftPressed;
 
+				std::function<void(int)> m_DragCallback;
+				int m_DragLastY;
+
 			public:
 				TextField();
 				void draw(Renderer* renderer);
@@ -47,6 +50,7 @@ namespace splitcell
 				void onBlur();
 
 				void setData(DatGui::Text* data);
+				void setDragCallback(std::function<void(int)> callback);
 		};
 	}
 }

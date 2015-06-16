@@ -23,7 +23,7 @@ DatGui::Data::~Data()
 
 }
 
-DatGui::Numeric::Numeric() : m_NumDecimals(-1)
+DatGui::Numeric::Numeric() : m_NumDecimals(-1), m_Step(1.0f)
 {
 
 }
@@ -49,6 +49,16 @@ void DatGui::Numeric::decimals(int num)
 int DatGui::Numeric::decimals()
 {
 	return m_NumDecimals;
+}
+
+void DatGui::Numeric::step(float st)
+{
+	m_Step = st;
+}
+
+float DatGui::Numeric::step()
+{
+	return m_Step;
 }
 
 float DatGui::Numeric::get()
