@@ -31,17 +31,25 @@ namespace splitcell
 
 			class Numeric : public Data
 			{
+				friend class DatGui;
 				private:
 					float m_Value;
+					int m_NumDecimals;
+
 					std::function<void(float)> m_ChangeCallback;
+					Numeric();
 				public:
 					void set(float v);
 					float get();
 					void setCallback(std::function<void(float)> cb);
+
+					void decimals(int num);
+					int decimals();
 			};
 
 			class Boolean : public Data
 			{
+				friend class DatGui;
 				private:
 					bool m_Value;
 					std::function<void(bool)> m_ChangeCallback;
@@ -54,10 +62,12 @@ namespace splitcell
 
 			class Action : public Data
 			{
+				friend class DatGui;
 			};
 
 			class Text : public Data
 			{
+				friend class DatGui;
 				private:
 					std::string m_Value;
 					std::function<void(std::string)> m_ChangeCallback;
@@ -70,6 +80,7 @@ namespace splitcell
 
 			class Folder : public Data
 			{
+				friend class DatGui;
 				public:
 					Action* addAction(std::string label, std::function<void()> callback);
 					Boolean* addBoolean(std::string label, bool value, std::function<void(bool)> callback = NULL);
@@ -78,11 +89,13 @@ namespace splitcell
 
 			class EnumInt : public Data
 			{
+				friend class DatGui;
 
 			};
 
 			class EnumString : public Data
 			{
+				friend class DatGui;
 
 			};
 

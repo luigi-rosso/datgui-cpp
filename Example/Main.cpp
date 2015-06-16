@@ -49,8 +49,14 @@ int main(int argc, char** argv)
     
     splitcell::DatGui::addText("message", "test", [](std::string val)
     {
-        printf("Text changde to: %s\n", val.c_str());
+        printf("Message changed to: %s\n", val.c_str());
     });
+
+    auto n = splitcell::DatGui::addNumeric("pi", 3.145f, [](float val)
+    {
+        printf("PI changed to: %f\n", val);
+    });
+    n->decimals(2);
 
 
     folder->remove(b);

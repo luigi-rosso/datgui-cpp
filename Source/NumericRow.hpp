@@ -20,8 +20,12 @@ namespace splitcell
 		class NumericRow : public Row
 		{
 			private:
+				int m_CacheNumDecimals;
+				DatGui::Text m_TextfieldData;
 				DatGui::Numeric* m_Data;
 				TextField m_TextField;
+
+				void updateDisplayValue();
 
 			public:
 				NumericRow();

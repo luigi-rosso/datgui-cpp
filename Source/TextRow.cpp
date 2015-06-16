@@ -5,7 +5,7 @@
 
 using namespace splitcell::datgui;
 
-static const Color MarkerColor(0, 150, 255, 255);
+static const Color MarkerColor(30, 211, 111, 255);
 
 TextRow::TextRow() : m_Data(NULL)
 {

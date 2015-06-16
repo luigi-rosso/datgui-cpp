@@ -23,6 +23,11 @@ DatGui::Data::~Data()
 
 }
 
+DatGui::Numeric::Numeric() : m_NumDecimals(2)
+{
+
+}
+
 void DatGui::Numeric::set(float v)
 {
 	if(v == m_Value)
@@ -34,6 +39,16 @@ void DatGui::Numeric::set(float v)
 	{
 		m_ChangeCallback(v);
 	}
+}
+
+void DatGui::Numeric::decimals(int num)
+{
+	m_NumDecimals = num;
+}
+
+int DatGui::Numeric::decimals()
+{
+	return m_NumDecimals;
 }
 
 float DatGui::Numeric::get()

@@ -5,9 +5,9 @@
 
 using namespace splitcell::datgui;
 
-static const Color MarkerColor(0, 150, 255, 200);
+static const Color MarkerColor(0, 150, 255, 255);
 
-NumericRow::NumericRow() : m_Data(NULL)
+NumericRow::NumericRow() : m_CacheNumDecimals(2), m_Data(NULL)
 {
 	m_TextField.setAccentColor(MarkerColor);
 }
@@ -22,8 +22,29 @@ float NumericRow::height()
 	return Gui::RowHeight;
 }
 
+void NumericRow::updateDisplayValue()
+{
+	if(m_Data == NULL)
+	{
+		return;
+	}
+	m_CacheNumDecimals = m_Data->decimals();
+
+	char fmtbuffer[16];
+	std::snprintf(fmtbuffer, sizeof(fmtbuffer), "%%.%if", m_CacheNumDecimals);
+
+	char buffer[256];
+	std::snprintf(buffer, sizeof(buffer), fmtbuffer, m_Data->get());
+	m_TextfieldData.set(std::string(buffer));
+	m_TextField.setData(&m_TextfieldData);
+}
+
 void NumericRow::draw(Renderer* renderer)
 {
+	if(m_Data != NULL && m_Data->decimals() != m_CacheNumDecimals)
+	{
+		updateDisplayValue();
+	}
 	float h = height();
 	renderer->drawRect(x(), y(), width(), h, isMouseOver() ? OverBackgroundColor : BackgroundColor);
 	renderer->drawRect(x(), y(), Gui::MarkerWidth, h, MarkerColor);
@@ -98,5 +119,9 @@ bool NumericRow::onMouseMove(int x, int y)
 void NumericRow::setData(DatGui::Numeric* data)
 {
 	m_Data = data;
+	if(data != NULL)
+	{
+		updateDisplayValue();
+	}
 	//m_TextField.setData(data);
 }
