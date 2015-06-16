@@ -78,14 +78,29 @@ bool TextField::onMouseDown(int x, int y)
 
 	Gui::captureMouse(this);
 	m_IsDraggingCursor = true;
-	m_MouseDownSeconds = Gui::elapsedSeconds()-0.5f;
+	float ds = Gui::elapsedSeconds()-0.5f;
+	bool selectAll = false;
+	if((ds - m_MouseDownSeconds) < 0.25f)
+	{
+		selectAll = true;
+	}
+	m_MouseDownSeconds = ds;
 
 	if(m_Data != NULL)
 	{
 		std::string val = m_Data->get();
-		float startX = m_Offset + 2;
-		m_SelectedIndex = Text::characterIndex(Gui::font(), val.c_str(), x - startX);
-		m_SelectionStartIndex = m_SelectionEndIndex = -1;
+		if(selectAll)
+		{
+			m_SelectedIndex = val.size();
+			m_SelectionStartIndex = 0;
+			m_SelectionEndIndex = m_SelectedIndex;
+		}
+		else
+		{
+			float startX = m_Offset + 2;
+			m_SelectedIndex = Text::characterIndex(Gui::font(), val.c_str(), x - startX);
+			m_SelectionStartIndex = m_SelectionEndIndex = -1;
+		}
 	}
 	return true;
 }
