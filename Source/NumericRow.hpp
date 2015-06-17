@@ -13,6 +13,10 @@
 #include "TextField.hpp"
 #endif
 
+#ifndef _SPLITCELL_DATGUI_SLIDER_HPP_
+#include "Slider.hpp"
+#endif
+
 namespace splitcell
 {
 	namespace datgui
@@ -25,8 +29,11 @@ namespace splitcell
 				DatGui::Text m_TextfieldData;
 				DatGui::Numeric* m_Data;
 				TextField m_TextField;
+				Slider m_Slider;
+				bool m_HasRange;
 
 				void updateDisplayValue();
+				void setValue(float v);
 
 			public:
 				NumericRow();

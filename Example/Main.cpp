@@ -58,7 +58,15 @@ int main(int argc, char** argv)
     });
     n->decimals(-1);
     n->step(0.1f);
-    n->range(-1.0f, 10.0f);
+    //n->range(-1.0f, 10.0f);
+
+    n = splitcell::DatGui::addNumeric("percent", 0.0f, [](float val)
+    {
+        printf("percent changed to: %f\n", val);
+    });
+    n->decimals(-1);
+    n->step(1.0f);
+    n->range(0.0f, 100.0f);
 
 
     folder->remove(b);

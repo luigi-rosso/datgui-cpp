@@ -25,7 +25,7 @@ DatGui::Data::~Data()
 
 }
 
-DatGui::Numeric::Numeric() : m_NumDecimals(-1), m_Step(1.0f), m_Min(-std::numeric_limits<float>::max()), m_Max(std::numeric_limits<float>::max())
+DatGui::Numeric::Numeric() : m_NumDecimals(-1), m_Step(std::numeric_limits<float>::max()), m_Min(-std::numeric_limits<float>::max()), m_Max(std::numeric_limits<float>::max())
 {
 
 }
