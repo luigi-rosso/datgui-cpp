@@ -7,6 +7,7 @@
 
 #include <functional>
 #include <string>
+#include <vector>
 
 namespace splitcell
 {
@@ -99,10 +100,27 @@ namespace splitcell
 					void remove(Data* data);
 			};
 
-			class EnumInt : public Data
+			class EnumNumeric : public Data
 			{
 				friend class DatGui;
+				public:
+					class Entry
+					{
+						private:
+							std::string m_Label;
+							float m_Value;
+						public:
+							Entry(std::string lbl, float val);
+							std::string label();
+							float value();
+					};
+				private:
+					std::vector<Entry> m_Entries;
+					std::function<void(EnumNumeric::Entry*)> m_ChangeCallback;
 
+				public:
+					int numEntries();
+					Entry* entry(int index);
 			};
 
 			class EnumString : public Data
@@ -133,6 +151,7 @@ namespace splitcell
 			static Boolean* addBoolean(std::string label, bool value, std::function<void(bool)> callback = NULL);
 			static Text* addText(std::string label, std::string value, std::function<void(std::string)> callback = NULL);
 			static Numeric* addNumeric(std::string label, float value, std::function<void(float)> callback = NULL);
+			static EnumNumeric* addEnum(std::string label, std::vector<EnumNumeric::Entry> entries, std::function<void(EnumNumeric::Entry*)> callback = NULL);
 			static Folder* addFolder(std::string label);
 
 			static void remove(Data* data);

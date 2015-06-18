@@ -68,6 +68,7 @@ int main(int argc, char** argv)
     n->step(1.0f);
     n->range(0.0f, 100.0f);
 
+    splitcell::DatGui::addEnum("Speed", { { "Stopped", 0.0f }, { "Slow", 0.1f }, { "Fast", 5.0f } } );
 
     folder->remove(b);
 

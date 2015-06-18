@@ -9,7 +9,7 @@ BUILD_DIR 		= Build
 LIB_DIR			= $(BUILD_DIR)/lib
 OBJ_DIR			= $(BUILD_DIR)/obj
 INCLUDE_DIR		= $(BUILD_DIR)/include/datgui
-CPP_SOURCES		= FontTexture.cpp Shader.cpp ShaderProgram.cpp OpenGLRenderer.cpp DatGui.cpp Gui.cpp MemoryFileReader.cpp Text.cpp Row.cpp RowContainer.cpp ActionRow.cpp FolderRow.cpp CloseRow.cpp CheckboxRow.cpp Control.cpp TextField.cpp TextRow.cpp NumericRow.cpp
+CPP_SOURCES		= FontTexture.cpp Shader.cpp ShaderProgram.cpp OpenGLRenderer.cpp DatGui.cpp Gui.cpp MemoryFileReader.cpp Text.cpp Row.cpp RowContainer.cpp ActionRow.cpp FolderRow.cpp CloseRow.cpp CheckboxRow.cpp Control.cpp TextField.cpp TextRow.cpp NumericRow.cpp Slider.cpp
 CPP_OBJECTS		= $(CPP_SOURCES:%.cpp=$(OBJ_DIR)/%.o)
 # Default target
 all: dirs $(OUTPUTFILE)

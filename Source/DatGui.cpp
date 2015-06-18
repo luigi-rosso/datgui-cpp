@@ -25,6 +25,32 @@ DatGui::Data::~Data()
 
 }
 
+DatGui::EnumNumeric::Entry::Entry(std::string lbl, float val) : m_Label(lbl),
+	m_Value(val)
+{
+	
+}
+
+std::string DatGui::EnumNumeric::Entry::label()
+{
+	return m_Label;
+}
+
+int DatGui::EnumNumeric::numEntries()
+{
+	return m_Entries.size();
+}
+
+DatGui::EnumNumeric::Entry* DatGui::EnumNumeric::entry(int index)
+{
+	return &m_Entries[index];
+}
+
+float DatGui::EnumNumeric::Entry::value()
+{
+	return m_Value;
+}
+
 DatGui::Numeric::Numeric() : m_NumDecimals(-1), m_Step(std::numeric_limits<float>::max()), m_Min(-std::numeric_limits<float>::max()), m_Max(std::numeric_limits<float>::max())
 {
 
@@ -368,4 +394,9 @@ DatGui::Numeric* DatGui::addNumeric(std::string label, float value, std::functio
 	row->setData(a);
 	a->m_Opaque = row;
 	return a;
+}
+
+DatGui::EnumNumeric* DatGui::addEnum(std::string label, std::vector<EnumNumeric::Entry> entries, std::function<void(EnumNumeric::Entry*)> callback)
+{
+	return NULL;
 }
