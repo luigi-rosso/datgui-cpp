@@ -25,6 +25,50 @@ DatGui::Data::~Data()
 
 }
 
+DatGui::EnumNumeric::EnumNumeric() : m_SelectedEntry(NULL)
+{
+
+}
+
+float DatGui::EnumNumeric::value()
+{
+	if(m_SelectedEntry != NULL)
+	{
+		return m_SelectedEntry->value();
+	}
+	if(!m_Entries.empty())
+	{
+		m_Entries[0].value();
+	}
+	return 0.0f;
+}
+
+void DatGui::EnumNumeric::setValue(float v)
+{
+	m_SelectedEntry = NULL;
+	if(m_Entries.empty())
+	{
+		return;
+	}
+	for(auto& entry : m_Entries)
+	{
+		if(entry.value() == v)
+		{
+			m_SelectedEntry = &entry;
+			if(m_ChangeCallback != NULL)
+			{
+				m_ChangeCallback(m_SelectedEntry);
+			}
+			break;
+		}
+	}
+}
+
+void DatGui::EnumNumeric::setCallback(std::function<void(EnumNumeric::Entry*)> cb)
+{
+	m_ChangeCallback = cb;
+}
+
 DatGui::EnumNumeric::Entry::Entry(std::string lbl, float val) : m_Label(lbl),
 	m_Value(val)
 {
@@ -396,7 +440,20 @@ DatGui::Numeric* DatGui::addNumeric(std::string label, float value, std::functio
 	return a;
 }
 
-DatGui::EnumNumeric* DatGui::addEnum(std::string label, std::vector<EnumNumeric::Entry> entries, std::function<void(EnumNumeric::Entry*)> callback)
+DatGui::EnumNumeric* DatGui::addEnum(std::string label, std::vector<EnumNumeric::Entry> entries, float selectedValue, std::function<void(EnumNumeric::Entry*)> callback)
 {
-	return NULL;
+	if(gui == NULL)
+	{
+		return NULL;
+	}
+	EnumNumeric* a = new EnumNumeric();
+	a->m_Entries = entries;
+	a->setValue(selectedValue);
+	a->setCallback(callback);
+
+	//NumericRow* row = gui->add<NumericRow>();
+	//row->setLabel(label);
+	//row->setData(a);
+	//a->m_Opaque = row;
+	return a;
 }
