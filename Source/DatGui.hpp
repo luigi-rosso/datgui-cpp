@@ -91,21 +91,13 @@ namespace splitcell
 					void setCallback(std::function<void(std::string)> cb);
 			};
 
-			class Folder : public Data
-			{
-				friend class DatGui;
-				public:
-					Action* addAction(std::string label, std::function<void()> callback);
-					Boolean* addBoolean(std::string label, bool value, std::function<void(bool)> callback = NULL);
-					void remove(Data* data);
-			};
-
 			class Enum : public Data
 			{
 				friend class DatGui;
 				public:
 					class Entry
 					{
+						friend class DatGui;
 						private:
 							std::string m_Label;
 							float m_Value;
@@ -128,9 +120,21 @@ namespace splitcell
 					float value();
 					Entry* selection();
 					void setValue(float v);
+					void setValue(std::string v);
 					void setCallback(std::function<void(Enum::Entry*)> cb);
 			};
 
+			class Folder : public Data
+			{
+				friend class DatGui;
+				public:
+					Action* addAction(std::string label, std::function<void()> callback);
+					Boolean* addBoolean(std::string label, bool value, std::function<void(bool)> callback = NULL);
+					Text* addText(std::string label, std::string value, std::function<void(std::string)> callback = NULL);
+					Numeric* addNumeric(std::string label, float value, std::function<void(float)> callback = NULL);
+					Enum* addEnum(std::string label, std::vector<Enum::Entry> entries, float selectedValue = 0.0f, std::function<void(Enum::Entry*)> callback = NULL);
+					void remove(Data* data);
+			};
 		private:
 			DatGui();
 			~DatGui();
@@ -153,7 +157,6 @@ namespace splitcell
 			static Boolean* addBoolean(std::string label, bool value, std::function<void(bool)> callback = NULL);
 			static Text* addText(std::string label, std::string value, std::function<void(std::string)> callback = NULL);
 			static Numeric* addNumeric(std::string label, float value, std::function<void(float)> callback = NULL);
-
 			static Enum* addEnum(std::string label, std::vector<Enum::Entry> entries, float selectedValue = 0.0f, std::function<void(Enum::Entry*)> callback = NULL);
 			static Folder* addFolder(std::string label);
 

@@ -49,6 +49,27 @@ float DatGui::Enum::value()
 	return 0.0f;
 }
 
+void DatGui::Enum::setValue(std::string v)
+{
+	m_SelectedEntry = NULL;
+	if(m_Entries.empty())
+	{
+		return;
+	}
+	for(auto& entry : m_Entries)
+	{
+		if(entry.label() == v)
+		{
+			m_SelectedEntry = &entry;
+			if(m_ChangeCallback != NULL)
+			{
+				m_ChangeCallback(m_SelectedEntry);
+			}
+			break;
+		}
+	}
+}
+
 void DatGui::Enum::setValue(float v)
 {
 	m_SelectedEntry = NULL;
@@ -435,6 +456,21 @@ DatGui::Text* DatGui::addText(std::string label, std::string value, std::functio
 	return a;
 }
 
+DatGui::Text* DatGui::Folder::addText(std::string label, std::string value, std::function<void(std::string)> callback)
+{
+	FolderRow* fr = reinterpret_cast<FolderRow*>(m_Opaque);
+
+	Text* a = new Text();
+	a->set(value);
+	a->setCallback(callback);
+
+	TextRow* row = fr->add<TextRow>();
+	row->setLabel(label);
+	row->setData(a);
+	a->m_Opaque = row;
+	return a;
+}
+
 DatGui::Numeric* DatGui::addNumeric(std::string label, float value, std::function<void(float)> callback)
 {
 	if(gui == NULL)
@@ -446,6 +482,21 @@ DatGui::Numeric* DatGui::addNumeric(std::string label, float value, std::functio
 	a->setCallback(callback);
 
 	NumericRow* row = gui->add<NumericRow>();
+	row->setLabel(label);
+	row->setData(a);
+	a->m_Opaque = row;
+	return a;
+}
+
+DatGui::Numeric* DatGui::Folder::addNumeric(std::string label, float value, std::function<void(float)> callback)
+{
+	FolderRow* fr = reinterpret_cast<FolderRow*>(m_Opaque);
+
+	Numeric* a = new Numeric();
+	a->set(value);
+	a->setCallback(callback);
+
+	NumericRow* row = fr->add<NumericRow>();
 	row->setLabel(label);
 	row->setData(a);
 	a->m_Opaque = row;
@@ -464,6 +515,22 @@ DatGui::Enum* DatGui::addEnum(std::string label, std::vector<Enum::Entry> entrie
 	a->setCallback(callback);
 
 	EnumRow* row = gui->add<EnumRow>();
+	row->setLabel(label);
+	row->setData(a);
+	a->m_Opaque = row;
+	return a;
+}
+
+DatGui::Enum* DatGui::Folder::addEnum(std::string label, std::vector<Enum::Entry> entries, float selectedValue, std::function<void(Enum::Entry*)> callback)
+{
+	FolderRow* fr = reinterpret_cast<FolderRow*>(m_Opaque);
+
+	Enum* a = new Enum();
+	a->m_Entries = entries;
+	a->setValue(selectedValue);
+	a->setCallback(callback);
+
+	EnumRow* row = fr->add<EnumRow>();
 	row->setLabel(label);
 	row->setData(a);
 	a->m_Opaque = row;
