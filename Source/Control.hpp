@@ -36,6 +36,7 @@ namespace splitcell
 				virtual bool onMouseDown(int x, int y) = 0;
 				virtual bool onMouseUp(int x, int y) = 0;
 				virtual bool onMouseMove(int x, int y) = 0;
+				virtual bool onMouseWheel(int x, int y, int dy) { return false; }
 
 				virtual bool onKeyDown(Keyboard::Key key) = 0;
 				virtual bool onKeyUp(Keyboard::Key key) = 0;

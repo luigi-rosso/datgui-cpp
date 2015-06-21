@@ -41,6 +41,7 @@ namespace splitcell
 				virtual bool onMouseDown(int x, int y) = 0;
 				virtual bool onMouseUp(int x, int y) = 0;
 				virtual bool onMouseMove(int x, int y) = 0;
+				virtual bool onMouseWheel(int x, int y, int d) { return false; }
 				virtual void onMouseEnter() { m_IsMouseOver = true; }
 				virtual void onMouseLeave() { m_IsMouseOver = false; }
 

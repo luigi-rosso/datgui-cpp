@@ -76,6 +76,18 @@ bool RowContainer::onMouseUp(int x, int y)
 	return false;
 }
 
+bool RowContainer::onMouseWheel(int x, int y, int dy)
+{
+	for(auto row : m_Rows)
+	{
+		if(!row->isHidden() && x >= row->x() && x <= row->x() + row->width() && y >= row->y() && y <= row->y() + row->height())
+		{
+			return row->onMouseWheel(x - row->x(), y - row->y(), dy);
+		}
+	}
+	return false;
+}
+
 bool RowContainer::onMouseMove(int x, int y)
 {
 	for(auto row : m_Rows)

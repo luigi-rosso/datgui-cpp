@@ -148,6 +148,7 @@ namespace splitcell
 			static bool onMouseDown(int x, int y);
 			static bool onMouseUp(int x, int y);
 			static bool onMouseMove(int x, int y);
+			static bool onMouseWheel(int x, int y, int dy);
 
 			static bool onKeyDown(Keyboard::Key key);
 			static bool onKeyUp(Keyboard::Key key);

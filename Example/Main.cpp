@@ -36,6 +36,34 @@ int main(int argc, char** argv)
         printf("HIT ACTION 4\n");
     });
 
+
+    folder->addBoolean("displayOutline", false, [](bool changedTo)
+    {
+        printf("Checkbox changd to: %i\n", changedTo ? 1 : 0);
+    });
+    
+    folder->addText("message", "test", [](std::string val)
+    {
+        printf("Message changed to: %s\n", val.c_str());
+    });
+
+    //n->range(-1.0f, 10.0f);
+
+    auto n2 = folder->addNumeric("percent", 0.0f, [](float val)
+    {
+        printf("percent changed to: %f\n", val);
+    });
+    n2->decimals(-1);
+    n2->step(1.0f);
+    n2->range(0.0f, 100.0f);
+
+    folder->addEnum("Speed", { { "Stopped", 0.0f }, { "Slow", 0.1f }, { "Fast", 5.0f } }, 0.0f, [](splitcell::DatGui::Enum::Entry* entry)
+    {
+        printf("speed: %f\n", entry->value());
+    } );
+
+    folder->remove(b);
+
     splitcell::DatGui::addAction("explode 2", []()
     {
         printf("HIT ACTION 2\n");
@@ -72,7 +100,6 @@ int main(int argc, char** argv)
         printf("speed: %f\n", entry->value());
     } );
 
-    folder->remove(b);
 
     sf::Clock clock;
     while (window.isOpen())
@@ -91,6 +118,9 @@ int main(int argc, char** argv)
                     break;
                 case sf::Event::TextEntered:
                     splitcell::DatGui::onCharInput(event.text.unicode);
+                    break;
+                case sf::Event::MouseWheelMoved:
+                    splitcell::DatGui::onMouseWheel(event.mouseWheel.x, event.mouseWheel.y, event.mouseWheel.delta);
                     break;
                  /*case sf::Event::MouseButtonPressed:
                 {
@@ -164,13 +194,9 @@ int main(int argc, char** argv)
             }
         }
         
-        sf::Time elapsed = clock.restart();
         window.clear(sf::Color(200, 200, 200, 255));
         
         splitcell::DatGui::draw();
-        //application.advance(elapsed.asSeconds());
-        //application.render(elapsed.asSeconds());
-        
         
         // Update the window
         window.display();

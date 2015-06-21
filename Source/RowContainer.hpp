@@ -26,6 +26,7 @@ namespace splitcell
 				bool onMouseDown(int x, int y);
 				bool onMouseUp(int x, int y);
 				bool onMouseMove(int x, int y);
+				bool onMouseWheel(int x, int y, int dy);
 
 				void forceMouseLeave();
 				void draw(Renderer* renderer);

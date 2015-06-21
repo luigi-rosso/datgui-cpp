@@ -319,6 +319,15 @@ bool DatGui::onMouseMove(int x, int y)
 	return gui->onMouseMove(x, y);
 }
 
+bool DatGui::onMouseWheel(int x, int y, int dy)
+{
+	if(gui == NULL)
+	{
+		return false;
+	}
+	return gui->onMouseWheel(x, y, dy);
+}
+
 bool DatGui::onCharInput(unsigned long int utf8)
 {
 	if(gui == NULL)

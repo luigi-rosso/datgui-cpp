@@ -214,6 +214,24 @@ bool Gui::onMouseMove(int x, int y)
 	return RowContainer::onMouseMove(x,y);
 }
 
+bool Gui::onMouseWheel(int x, int y, int dy)
+{
+	if(m_MouseCapture != NULL && m_MouseCapture->onMouseWheel(x-m_MouseCapture->x(), y-m_MouseCapture->y(), dy))
+	{
+		return true;
+	}
+	else if(m_Popup != NULL && 
+		x >= m_Popup->x() && 
+		x <= m_Popup->x() + m_Popup->width() && 
+		y >= m_Popup->y() && 
+		y <= m_Popup->y() + m_Popup->height() &&
+		m_Popup->onMouseWheel(x - m_Popup->x(), y - m_Popup->y(), dy))
+	{
+		return true;
+	}
+	return RowContainer::onMouseWheel(x,y,dy);
+}
+
 bool Gui::onKeyDown(Keyboard::Key key)
 {
 	if(m_Focus != NULL && m_Focus->onKeyDown(key))
