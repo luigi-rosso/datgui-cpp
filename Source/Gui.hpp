@@ -47,8 +47,10 @@ namespace splitcell
 
 				Control* m_Focus;
 				Control* m_MouseCapture;
+				Control* m_Popup;
 
 				bool m_IsHidingRows;
+				bool m_DidPopup;
 
 				Row* m_CloseRow;
 				std::chrono::time_point<std::chrono::system_clock> m_LastRenderTime;
@@ -101,6 +103,13 @@ namespace splitcell
 				{
 					return sm_Instance->m_ElapsedSeconds;
 				}
+
+				static void popup(Control* control);
+				static void closePopup(Control* control = NULL);
+				static bool isPopup(Control* control);
+
+				static unsigned int screenHeight();
+				static unsigned int screenWidth();
 		};
 	}
 }

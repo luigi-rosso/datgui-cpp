@@ -43,6 +43,7 @@ namespace splitcell
 
 				virtual void onFocus() = 0;
 				virtual void onBlur() = 0;
+				virtual void onPlaced() {}
 
 				void focus() { m_IsFocused = true; onFocus(); }
 				void blur() { m_IsFocused = false; onBlur(); }
@@ -52,8 +53,11 @@ namespace splitcell
 				float width() { return m_Width; }
 				float height() { return m_Height; }
 				Color accentColor() { return m_AccentColor; }
-				void setAccentColor(Color c) { m_AccentColor = c; }
+				void setAccentColor(Color c) { m_AccentColor = c; onSetAccentColor(); }
 				bool isFocused() { return m_IsFocused; }
+
+			private:
+				virtual void onSetAccentColor() {}
 		};
 	}
 }

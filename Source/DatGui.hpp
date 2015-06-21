@@ -100,7 +100,7 @@ namespace splitcell
 					void remove(Data* data);
 			};
 
-			class EnumNumeric : public Data
+			class Enum : public Data
 			{
 				friend class DatGui;
 				public:
@@ -111,28 +111,24 @@ namespace splitcell
 							float m_Value;
 						public:
 							Entry(std::string lbl, float val);
+							Entry(std::string lbl);
 							std::string label();
 							float value();
 					};
 				private:
 					std::vector<Entry> m_Entries;
-					std::function<void(EnumNumeric::Entry*)> m_ChangeCallback;
+					std::function<void(Enum::Entry*)> m_ChangeCallback;
 					Entry* m_SelectedEntry;
-					EnumNumeric();
+					Enum();
 
 				public:
 					int numEntries();
 					Entry* entry(int index);
 
 					float value();
+					Entry* selection();
 					void setValue(float v);
-					void setCallback(std::function<void(EnumNumeric::Entry*)> cb);
-			};
-
-			class EnumString : public Data
-			{
-				friend class DatGui;
-
+					void setCallback(std::function<void(Enum::Entry*)> cb);
 			};
 
 		private:
@@ -158,7 +154,7 @@ namespace splitcell
 			static Text* addText(std::string label, std::string value, std::function<void(std::string)> callback = NULL);
 			static Numeric* addNumeric(std::string label, float value, std::function<void(float)> callback = NULL);
 
-			static EnumNumeric* addEnum(std::string label, std::vector<EnumNumeric::Entry> entries, float selectedValue = 0.0f, std::function<void(EnumNumeric::Entry*)> callback = NULL);
+			static Enum* addEnum(std::string label, std::vector<Enum::Entry> entries, float selectedValue = 0.0f, std::function<void(Enum::Entry*)> callback = NULL);
 			static Folder* addFolder(std::string label);
 
 			static void remove(Data* data);

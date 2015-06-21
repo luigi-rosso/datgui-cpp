@@ -5,8 +5,6 @@
 
 using namespace splitcell::datgui;
 
-static const float TextPad = 2.0f;
-
 Slider::Slider() : m_Data(NULL), m_IsDraggingCursor(false)
 {
 

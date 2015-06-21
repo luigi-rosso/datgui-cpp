@@ -2,8 +2,8 @@
 
 using namespace splitcell::datgui;
 
-const Color Control::BackgroundColor(60, 60, 60, 230);
-const Color Control::OverBackgroundColor(70, 70, 70, 230);
+const Color Control::BackgroundColor(60, 60, 60, 240);
+const Color Control::OverBackgroundColor(70, 70, 70, 240);
 const float Control::Padding = 5.0f;
 
 Control::Control() :
@@ -22,4 +22,6 @@ void Control::place(float x, float y, float width, float height)
 	m_Y = y;
 	m_Width = width;
 	m_Height = height;
+
+	onPlaced();
 }

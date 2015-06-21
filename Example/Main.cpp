@@ -8,9 +8,8 @@ int main(int argc, char** argv)
     contextSettings.depthBits = 24;
     contextSettings.stencilBits = 8;
     contextSettings.antialiasingLevel = 0;
-    float screenScale = 1.0f;
 
-    sf::RenderWindow window(sf::VideoMode(640, 480), "splitcell - datgui", sf::Style::Default, contextSettings);
+    sf::RenderWindow window(sf::VideoMode(640, 280), "splitcell - datgui", sf::Style::Default, contextSettings);
 
     window.setVerticalSyncEnabled(true);
 
@@ -68,7 +67,10 @@ int main(int argc, char** argv)
     n->step(1.0f);
     n->range(0.0f, 100.0f);
 
-    splitcell::DatGui::addEnum("Speed", { { "Stopped", 0.0f }, { "Slow", 0.1f }, { "Fast", 5.0f } }, 0.0f );
+    splitcell::DatGui::addEnum("Speed", { { "Stopped", 0.0f }, { "Slow", 0.1f }, { "Fast", 5.0f } }, 0.0f, [](splitcell::DatGui::Enum::Entry* entry)
+    {
+        printf("speed: %f\n", entry->value());
+    } );
 
     folder->remove(b);
 

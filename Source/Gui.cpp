@@ -27,7 +27,9 @@ Gui::Gui(unsigned int screenWidth, unsigned int screenHeight) :
 	m_ScreenHeight(screenHeight), 
 	m_Focus(NULL), 
 	m_MouseCapture(NULL), 
+	m_Popup(NULL),
 	m_IsHidingRows(false),
+	m_DidPopup(false),
 	m_LastRenderTime(std::chrono::system_clock::now())
 {
 	sm_Instance = this;
@@ -128,6 +130,11 @@ void Gui::draw()
 
 	RowContainer::draw(m_Renderer);
 
+	if(m_Popup != NULL)
+	{
+		m_Popup->draw(m_Renderer);
+	}
+
 	m_Renderer->popState();
 }
 
@@ -138,10 +145,32 @@ bool Gui::onMouseDown(int x, int y)
 		return true;
 	}
 
-	if(RowContainer::onMouseDown(x,y))
+	if(m_Popup != NULL && 
+		x >= m_Popup->x() && 
+		x <= m_Popup->x() + m_Popup->width() && 
+		y >= m_Popup->y() && 
+		y <= m_Popup->y() + m_Popup->height() &&
+		m_Popup->onMouseDown(x - m_Popup->x(), y - m_Popup->y()))
 	{
 		return true;
 	}
+
+	m_DidPopup = false;
+
+	if(RowContainer::onMouseDown(x,y))
+	{
+		if(!m_DidPopup)
+		{
+			m_Popup = NULL;
+		}
+		return true;
+	}
+
+	if(!m_DidPopup)
+	{
+		m_Popup = NULL;
+	}
+
 	focus(NULL);
 	return false;
 }
@@ -155,12 +184,30 @@ bool Gui::onMouseUp(int x, int y)
 	{
 		return true;
 	}
+	else if(m_Popup != NULL && 
+		x >= m_Popup->x() && 
+		x <= m_Popup->x() + m_Popup->width() && 
+		y >= m_Popup->y() && 
+		y <= m_Popup->y() + m_Popup->height() &&
+		m_Popup->onMouseDown(x - m_Popup->x(), y - m_Popup->y()))
+	{
+		return true;
+	}
 	return RowContainer::onMouseUp(x,y);
 }
 
 bool Gui::onMouseMove(int x, int y)
 {
 	if(m_MouseCapture != NULL && m_MouseCapture->onMouseMove(x-m_MouseCapture->x(), y-m_MouseCapture->y()))
+	{
+		return true;
+	}
+	else if(m_Popup != NULL && 
+		x >= m_Popup->x() && 
+		x <= m_Popup->x() + m_Popup->width() && 
+		y >= m_Popup->y() && 
+		y <= m_Popup->y() + m_Popup->height() &&
+		m_Popup->onMouseMove(x - m_Popup->x(), y - m_Popup->y()))
 	{
 		return true;
 	}
@@ -223,3 +270,33 @@ void Gui::focus(Control* control)
 		sm_Instance->m_Focus->focus();
 	}
 }
+
+void Gui::popup(Control* control)
+{
+	sm_Instance->m_DidPopup = true;
+	sm_Instance->m_Popup = control;
+}
+
+void Gui::closePopup(Control* control)
+{
+	if(control == NULL || control == sm_Instance->m_Popup)
+	{
+		sm_Instance->m_Popup = NULL;
+	}
+}
+
+bool Gui::isPopup(Control* control)
+{
+	return control == sm_Instance->m_Popup;
+}
+
+unsigned int Gui::screenHeight()
+{
+	return sm_Instance->m_ScreenHeight;
+}
+
+unsigned int Gui::screenWidth()
+{
+	return sm_Instance->m_ScreenWidth;
+}
+

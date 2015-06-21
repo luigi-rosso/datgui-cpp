@@ -5,6 +5,7 @@
 #include "CheckboxRow.hpp"
 #include "TextRow.hpp"
 #include "NumericRow.hpp"
+#include "EnumRow.hpp"
 
 #include <limits>
 
@@ -25,12 +26,17 @@ DatGui::Data::~Data()
 
 }
 
-DatGui::EnumNumeric::EnumNumeric() : m_SelectedEntry(NULL)
+DatGui::Enum::Enum() : m_SelectedEntry(NULL)
 {
 
 }
 
-float DatGui::EnumNumeric::value()
+DatGui::Enum::Entry* DatGui::Enum::selection()
+{
+	return m_SelectedEntry;
+}
+
+float DatGui::Enum::value()
 {
 	if(m_SelectedEntry != NULL)
 	{
@@ -43,7 +49,7 @@ float DatGui::EnumNumeric::value()
 	return 0.0f;
 }
 
-void DatGui::EnumNumeric::setValue(float v)
+void DatGui::Enum::setValue(float v)
 {
 	m_SelectedEntry = NULL;
 	if(m_Entries.empty())
@@ -64,33 +70,39 @@ void DatGui::EnumNumeric::setValue(float v)
 	}
 }
 
-void DatGui::EnumNumeric::setCallback(std::function<void(EnumNumeric::Entry*)> cb)
+void DatGui::Enum::setCallback(std::function<void(Enum::Entry*)> cb)
 {
 	m_ChangeCallback = cb;
 }
 
-DatGui::EnumNumeric::Entry::Entry(std::string lbl, float val) : m_Label(lbl),
+DatGui::Enum::Entry::Entry(std::string lbl, float val) : m_Label(lbl),
 	m_Value(val)
 {
 	
 }
 
-std::string DatGui::EnumNumeric::Entry::label()
+DatGui::Enum::Entry::Entry(std::string lbl) : m_Label(lbl),
+	m_Value(0.0f)
+{
+	
+}
+
+std::string DatGui::Enum::Entry::label()
 {
 	return m_Label;
 }
 
-int DatGui::EnumNumeric::numEntries()
+int DatGui::Enum::numEntries()
 {
 	return m_Entries.size();
 }
 
-DatGui::EnumNumeric::Entry* DatGui::EnumNumeric::entry(int index)
+DatGui::Enum::Entry* DatGui::Enum::entry(int index)
 {
 	return &m_Entries[index];
 }
 
-float DatGui::EnumNumeric::Entry::value()
+float DatGui::Enum::Entry::value()
 {
 	return m_Value;
 }
@@ -440,20 +452,20 @@ DatGui::Numeric* DatGui::addNumeric(std::string label, float value, std::functio
 	return a;
 }
 
-DatGui::EnumNumeric* DatGui::addEnum(std::string label, std::vector<EnumNumeric::Entry> entries, float selectedValue, std::function<void(EnumNumeric::Entry*)> callback)
+DatGui::Enum* DatGui::addEnum(std::string label, std::vector<Enum::Entry> entries, float selectedValue, std::function<void(Enum::Entry*)> callback)
 {
 	if(gui == NULL)
 	{
 		return NULL;
 	}
-	EnumNumeric* a = new EnumNumeric();
+	Enum* a = new Enum();
 	a->m_Entries = entries;
 	a->setValue(selectedValue);
 	a->setCallback(callback);
 
-	//NumericRow* row = gui->add<NumericRow>();
-	//row->setLabel(label);
-	//row->setData(a);
-	//a->m_Opaque = row;
+	EnumRow* row = gui->add<EnumRow>();
+	row->setLabel(label);
+	row->setData(a);
+	a->m_Opaque = row;
 	return a;
 }

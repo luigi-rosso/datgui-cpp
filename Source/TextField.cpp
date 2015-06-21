@@ -222,6 +222,9 @@ bool TextField::onKeyDown(Keyboard::Key key)
 				ensureCursorVisible();
 			}
 			return true;
+
+		default:
+			break;
 	}
 	return false;
 }
@@ -241,6 +244,8 @@ bool TextField::onKeyUp(Keyboard::Key key)
 		case Keyboard::Return:
 			Gui::focus(NULL);
 			return true;
+		default:
+			break;
 	}
 
 	return false;
@@ -300,8 +305,10 @@ bool TextField::onCharInput(unsigned long int utf8)
 		case 127: // Erase
 		case 10: // Enter
 			return false;
+		default:
+			break;
 	}
-	printf("CHAR INPUT: %i\n", utf8);
+	printf("CHAR INPUT: %lu\n", utf8);
 	injectText(Text::fromUTF8(utf8));
 	return true;
 }
