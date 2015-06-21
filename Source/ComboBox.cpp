@@ -82,7 +82,7 @@ bool ComboBox::onMouseDown(int lx, int ly)
 	// Determine where to place it.
 
 	float spaceBelow = (float)Gui::screenHeight() - (y() + height() + m_Popup.contentHeight());
-	float spaceAbove = y() - height() - m_Popup.contentHeight();
+	float spaceAbove = y() - m_Popup.contentHeight();
 
 	if(spaceBelow > 0.0f)
 	{
@@ -97,16 +97,16 @@ bool ComboBox::onMouseDown(int lx, int ly)
 	else if(spaceBelow > spaceAbove)
 	{
 		// Third priority position, place popup below, with scrolling.
-		float popupHeight = spaceBelow;
+		float popupHeight = Gui::screenHeight()-(y()+height());
 		m_Popup.place(x(), y()+height(), m_ActualWidth, popupHeight);
 	}
 	else
 	{
 		// Final catch all, place popup above, with scrolling.
-		float popupHeight = spaceAbove;
-		m_Popup.place(x(), y()-height()-popupHeight, m_ActualWidth, popupHeight);	
+		float popupHeight = y();
+		m_Popup.place(x(), y()-popupHeight, m_ActualWidth, popupHeight);	
 	}
-	printf("POP IT UP! %f %f %f %f\n", m_Popup.x(), m_Popup.y(), m_Popup.width(), m_Popup.height());
+
 	Gui::popup(&m_Popup);
 
 	return true;

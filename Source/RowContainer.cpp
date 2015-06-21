@@ -3,10 +3,11 @@
 
 using namespace splitcell::datgui;
 
-RowContainer::RowContainer() : m_MouseOverRow(NULL)
+RowContainer::RowContainer() : m_MouseOverRow(NULL), m_ContentHeight(0.0f)
 {
 
 }
+
 RowContainer::~RowContainer()
 {
 	for(auto r : m_Rows)
@@ -17,6 +18,7 @@ RowContainer::~RowContainer()
 
 void RowContainer::repositionRows(float x, float y, float width, float labelWidth)
 {
+	float startY = y;
 	for(auto row : m_Rows)
 	{
 		if(!row->isHidden())
@@ -25,6 +27,8 @@ void RowContainer::repositionRows(float x, float y, float width, float labelWidt
 			y += row->height();
 		}
 	}
+
+	m_ContentHeight = y-startY;
 }
 
 void RowContainer::addRow(Row* row)
@@ -76,7 +80,7 @@ bool RowContainer::onMouseUp(int x, int y)
 	return false;
 }
 
-bool RowContainer::onMouseWheel(int x, int y, int dy)
+bool RowContainer::onMouseWheel(int x, int y, float dy)
 {
 	for(auto row : m_Rows)
 	{

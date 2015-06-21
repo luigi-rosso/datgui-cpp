@@ -2,9 +2,9 @@
 
 using namespace splitcell::datgui;
 
-const Color Row::BackgroundColor(0, 0, 0, 230);
+const Color Row::BackgroundColor(7, 7, 7, 230);
 const Color Row::OverBackgroundColor(20, 20, 20, 230);
-const Color Row::SeparatorColor(100, 100, 100, 200);
+const Color Row::SeparatorColor(40, 40, 40, 230);
 
 
 Row::Row() :
@@ -12,6 +12,7 @@ Row::Row() :
 		m_Y(0.0f),
 		m_Width(0.0f),
 		m_LabelWidth(0.0f),
+		m_IsMouseOver(false),
 		m_IsHidden(false)
 {
 

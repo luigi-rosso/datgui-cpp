@@ -319,7 +319,7 @@ bool DatGui::onMouseMove(int x, int y)
 	return gui->onMouseMove(x, y);
 }
 
-bool DatGui::onMouseWheel(int x, int y, int dy)
+bool DatGui::onMouseWheel(int x, int y, float dy)
 {
 	if(gui == NULL)
 	{

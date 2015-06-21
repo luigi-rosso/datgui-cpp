@@ -7,7 +7,7 @@ using namespace splitcell::datgui;
 
 static const float RowPadding = 10.0f;
 
-ComboBoxPopup::ComboBoxPopup() : m_Data(NULL)
+ComboBoxPopup::ComboBoxPopup() : m_Data(NULL), m_ScrollOffset(0.0f)
 {
 
 }
@@ -32,6 +32,8 @@ void ComboBoxPopup::onPlaced()
 
 void ComboBoxPopup::draw(Renderer* renderer)
 {
+	float scrollRange = height()-contentHeight();
+	m_ScrollOffset = std::min(0.0f, std::max(scrollRange, m_ScrollOffset));
 	renderer->drawRect(x(), y(), width(), height(), BackgroundColor);
 
 	if(m_Data == NULL)
@@ -40,7 +42,7 @@ void ComboBoxPopup::draw(Renderer* renderer)
 	}
 
 	float startX = x() + Padding;
-	float currentY = y() + Padding;
+	float currentY = y() + Padding + m_ScrollOffset;
 	renderer->pushClip(startX, y(), width()-Padding*2.0f, height());
 
 	float lineHeight = (float)Gui::font()->getLineHeight() + RowPadding;
@@ -90,6 +92,12 @@ bool ComboBoxPopup::onMouseUp(int x, int y)
 
 bool ComboBoxPopup::onMouseMove(int x, int y)
 {
+	return true;
+}
+
+bool ComboBoxPopup::onMouseWheel(int x, int y, float dy)
+{
+	m_ScrollOffset += dy;
 	return true;
 }
 

@@ -9,7 +9,7 @@ int main(int argc, char** argv)
     contextSettings.stencilBits = 8;
     contextSettings.antialiasingLevel = 0;
 
-    sf::RenderWindow window(sf::VideoMode(640, 280), "splitcell - datgui", sf::Style::Default, contextSettings);
+    sf::RenderWindow window(sf::VideoMode(640, 480), "splitcell - datgui", sf::Style::Default, contextSettings);
 
     window.setVerticalSyncEnabled(true);
 
@@ -95,7 +95,7 @@ int main(int argc, char** argv)
     n->step(1.0f);
     n->range(0.0f, 100.0f);
 
-    splitcell::DatGui::addEnum("Speed", { { "Stopped", 0.0f }, { "Slow", 0.1f }, { "Fast", 5.0f } }, 0.0f, [](splitcell::DatGui::Enum::Entry* entry)
+    splitcell::DatGui::addEnum("Speed", { { "Stopped", 0.0f }, { "Slow", 0.1f }, { "Fast", 5.0f }, { "Faster", 5.0f }, { "Fasterest", 5.0f } }, 0.0f, [](splitcell::DatGui::Enum::Entry* entry)
     {
         printf("speed: %f\n", entry->value());
     } );
@@ -119,8 +119,11 @@ int main(int argc, char** argv)
                 case sf::Event::TextEntered:
                     splitcell::DatGui::onCharInput(event.text.unicode);
                     break;
-                case sf::Event::MouseWheelMoved:
-                    splitcell::DatGui::onMouseWheel(event.mouseWheel.x, event.mouseWheel.y, event.mouseWheel.delta);
+                case sf::Event::MouseWheelScrolled:
+                    if(event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+                    {
+                        splitcell::DatGui::onMouseWheel(event.mouseWheelScroll.x, event.mouseWheelScroll.y, event.mouseWheelScroll.delta);
+                    }
                     break;
                  /*case sf::Event::MouseButtonPressed:
                 {

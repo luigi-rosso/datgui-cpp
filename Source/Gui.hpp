@@ -44,6 +44,7 @@ namespace splitcell
 				Font* m_IconFont;
 				unsigned int m_ScreenWidth;
 				unsigned int m_ScreenHeight;
+				float m_ScrollOffset;
 
 				Control* m_Focus;
 				Control* m_MouseCapture;
@@ -68,7 +69,7 @@ namespace splitcell
 				bool onMouseDown(int x, int y);
 				bool onMouseUp(int x, int y);
 				bool onMouseMove(int x, int y);
-				bool onMouseWheel(int x, int y, int dy);
+				bool onMouseWheel(int x, int y, float dy);
 
 				bool onKeyDown(Keyboard::Key key);
 				bool onKeyUp(Keyboard::Key key);

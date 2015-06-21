@@ -17,7 +17,7 @@ namespace splitcell
 		{
 			private:
 				DatGui::Enum* m_Data;
-
+				float m_ScrollOffset;
 			public:
 				ComboBoxPopup();
 				void draw(Renderer* renderer);
@@ -25,6 +25,7 @@ namespace splitcell
 				bool onMouseDown(int x, int y);
 				bool onMouseUp(int x, int y);
 				bool onMouseMove(int x, int y);
+				bool onMouseWheel(int x, int y, float dy);
 
 				bool onKeyDown(Keyboard::Key key);
 				bool onKeyUp(Keyboard::Key key);

@@ -14,6 +14,8 @@ namespace splitcell
 		{
 			private:
 				Row* m_MouseOverRow;
+				float m_ContentHeight;
+
 			protected:
 				std::vector<Row*> m_Rows;
 
@@ -26,7 +28,7 @@ namespace splitcell
 				bool onMouseDown(int x, int y);
 				bool onMouseUp(int x, int y);
 				bool onMouseMove(int x, int y);
-				bool onMouseWheel(int x, int y, int dy);
+				bool onMouseWheel(int x, int y, float dy);
 
 				void forceMouseLeave();
 				void draw(Renderer* renderer);
@@ -51,6 +53,7 @@ namespace splitcell
 				}
 
 				void removeRow(Row* row);
+				float contentHeight() { return m_ContentHeight; }
 		};
 	}
 }

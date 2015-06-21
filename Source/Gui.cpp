@@ -10,6 +10,9 @@ using namespace splitcell::datgui;
 #include "MemoryFiles/Volter__28Goldfish_29.ttf9.cache.h"
 static MemoryFile FontMemoryFile("Volter__28Goldfish_29.ttf9.cache", Volter__28Goldfish_29_ttf9_cache, Volter__28Goldfish_29_ttf9_cache_len);
 
+//#include "MemoryFiles/Terminus.ttf16.cache.h"
+//static MemoryFile FontMemoryFile("Terminus.ttf16.cache.h", Terminus_ttf16_cache, Terminus_ttf16_cache_len);
+
 #include "MemoryFiles/fontawesome.ttf14.cache.h"
 static MemoryFile FontIconMemoryFile("fontawesome.ttf14.cache", fontawesome_ttf14_cache, fontawesome_ttf14_cache_len);
 
@@ -25,6 +28,7 @@ Gui* Gui::sm_Instance = NULL;
 Gui::Gui(unsigned int screenWidth, unsigned int screenHeight) : 
 	m_ScreenWidth(screenWidth), 
 	m_ScreenHeight(screenHeight), 
+	m_ScrollOffset(0.0f),
 	m_Focus(NULL), 
 	m_MouseCapture(NULL), 
 	m_Popup(NULL),
@@ -77,10 +81,13 @@ void Gui::setRowsHidden(bool hidden)
 
 void Gui::repositionRows()
 {
-	float x = (float)round(m_ScreenWidth - GuiWidth - GuiPad);
-	float y = 0.0f;
+	float maxOffset = -std::max(0.0f, RowContainer::contentHeight()-m_ScreenHeight);
 
-	RowContainer::repositionRows(x, y, GuiWidth, LabelColumnWidth);
+
+	float x = (float)round(m_ScreenWidth - GuiWidth - GuiPad);
+	m_ScrollOffset = std::min(0.0f, std::max(maxOffset, m_ScrollOffset));
+
+	RowContainer::repositionRows(x, m_ScrollOffset, GuiWidth, LabelColumnWidth);
 }
 
 void Gui::onRowsChanged()
@@ -214,7 +221,7 @@ bool Gui::onMouseMove(int x, int y)
 	return RowContainer::onMouseMove(x,y);
 }
 
-bool Gui::onMouseWheel(int x, int y, int dy)
+bool Gui::onMouseWheel(int x, int y, float dy)
 {
 	if(m_MouseCapture != NULL && m_MouseCapture->onMouseWheel(x-m_MouseCapture->x(), y-m_MouseCapture->y(), dy))
 	{
@@ -224,12 +231,19 @@ bool Gui::onMouseWheel(int x, int y, int dy)
 		x >= m_Popup->x() && 
 		x <= m_Popup->x() + m_Popup->width() && 
 		y >= m_Popup->y() && 
-		y <= m_Popup->y() + m_Popup->height() &&
+		y <= m_Popup->y() + m_Popup->height() && 
 		m_Popup->onMouseWheel(x - m_Popup->x(), y - m_Popup->y(), dy))
 	{
 		return true;
 	}
-	return RowContainer::onMouseWheel(x,y,dy);
+	else if(RowContainer::onMouseWheel(x,y,dy))
+	{
+		return true;
+	}
+
+	m_ScrollOffset += dy*10.0f;
+	repositionRows();
+	return true;
 }
 
 bool Gui::onKeyDown(Keyboard::Key key)
