@@ -25,6 +25,10 @@ dirs:
 	cp Source/DatGui.hpp $(INCLUDE_DIR)/DatGui.hpp
 	cp Source/Key.hpp $(INCLUDE_DIR)/Key.hpp
 
+install:
+	cp -r Build/include/ /usr/local/include
+	cp -r Build/lib/ /usr/local/lib
+
 # Build sources
 $(OUTPUTFILE): $(CPP_OBJECTS)
 	ar ru $(LIB_DIR)/$@ $^

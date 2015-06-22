@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <datgui/DatGui.hpp>
-
+    
 int main(int argc, char** argv)
 {
 	sf::ContextSettings contextSettings;
@@ -14,6 +14,10 @@ int main(int argc, char** argv)
     window.setVerticalSyncEnabled(true);
 
     sf::Vector2u size = window.getSize();
+
+    // --
+    // -- Set up DatGui and add some entries.
+    // --
 
     splitcell::DatGui::initialize(size.x, size.y);
 
@@ -46,8 +50,6 @@ int main(int argc, char** argv)
     {
         printf("Message changed to: %s\n", val.c_str());
     });
-
-    //n->range(-1.0f, 10.0f);
 
     auto n2 = folder->addNumeric("percent", 0.0f, [](float val)
     {
@@ -85,8 +87,6 @@ int main(int argc, char** argv)
     });
     n->decimals(-1);
     n->step(0.1f);
-    //n->range(-1.0f, 10.0f);
-
     n = splitcell::DatGui::addNumeric("percent", 0.0f, [](float val)
     {
         printf("percent changed to: %f\n", val);
@@ -101,10 +101,13 @@ int main(int argc, char** argv)
     } );
 
 
+    // --
+    // -- Render loop and handle events
+    // --
+
     sf::Clock clock;
     while (window.isOpen())
     {
-        // Process events
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -125,55 +128,13 @@ int main(int argc, char** argv)
                         splitcell::DatGui::onMouseWheel(event.mouseWheelScroll.x, event.mouseWheelScroll.y, event.mouseWheelScroll.delta);
                     }
                     break;
-                 /*case sf::Event::MouseButtonPressed:
-                {
-                    SplitCell::Mouse::Button buttonType;
-                    switch(event.mouseButton.button)
-                    {
-                        case sf::Mouse::Left:
-                            buttonType = SplitCell::Mouse::Left;
-                            break;
-                        case sf::Mouse::Right:
-                            buttonType = SplitCell::Mouse::Right;
-                            break;
-                        case sf::Mouse::Middle:
-                            buttonType = SplitCell::Mouse::Middle;
-                            break;
-                    }
-                    
-                    application.OnMouseDown(buttonType, event.mouseButton.x, event.mouseButton.y);
-                    break;
-                }
-                case sf::Event::MouseButtonReleased:
-                {
-                    SplitCell::Mouse::Button buttonType;
-                    switch(event.mouseButton.button)
-                    {
-                        case sf::Mouse::Left:
-                            buttonType = SplitCell::Mouse::Left;
-                            break;
-                        case sf::Mouse::Right:
-                            buttonType = SplitCell::Mouse::Right;
-                            break;
-                        case sf::Mouse::Middle:
-                            buttonType = SplitCell::Mouse::Middle;
-                            break;
-                    }
-                    
-                    application.OnMouseUp(buttonType, event.mouseButton.x, event.mouseButton.y);
-                    break;
-                }*/
                 case sf::Event::MouseButtonPressed:
                 {
-                    //touch.set(event.mouseButton.x, event.mouseButton.y);
-                    //application.onTouchDown(&touch, 1, NULL, 0);
                     splitcell::DatGui::onMouseDown(event.mouseButton.x, event.mouseButton.y);
                     break;
                 }
                 case sf::Event::MouseButtonReleased:
                 {
-                    //touch.set(event.mouseButton.x, event.mouseButton.y);
-                    //application.onTouchUp(&touch, 1, NULL, 0);
                     splitcell::DatGui::onMouseUp(event.mouseButton.x, event.mouseButton.y);
                     break;
                 }
@@ -201,7 +162,6 @@ int main(int argc, char** argv)
         
         splitcell::DatGui::draw();
         
-        // Update the window
         window.display();
     }
 	return 0;
