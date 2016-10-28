@@ -12,8 +12,9 @@ INCLUDE_DIR		= $(BUILD_DIR)/include/datgui
 CPP_SOURCES		= FontTexture.cpp Shader.cpp ShaderProgram.cpp OpenGLRenderer.cpp DatGui.cpp Gui.cpp MemoryFileReader.cpp Text.cpp Row.cpp RowContainer.cpp ActionRow.cpp FolderRow.cpp CloseRow.cpp CheckboxRow.cpp Control.cpp TextField.cpp TextRow.cpp NumericRow.cpp Slider.cpp ComboBox.cpp EnumRow.cpp ComboBoxPopup.cpp
 CPP_OBJECTS		= $(CPP_SOURCES:%.cpp=$(OBJ_DIR)/%.o)
 # Default target
+#all: dirs $(OUTPUTFILE)
+#	cd Example && make
 all: dirs $(OUTPUTFILE)
-	cd Example && make
 
 clean:
 	$(RM) -fR $(BUILD_DIR)
